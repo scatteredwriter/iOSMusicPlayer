@@ -11,7 +11,7 @@
 #import "MusicControlBar.h"
 #import "UIViewController+Additional.h"
 
-#define MUSIC_CONTROL_BAR_HEIGHT 80
+#define MUSIC_CONTROL_BAR_HEIGHT 70
 
 @interface MainViewController ()
 @property (nonnull, strong) UIWindow *mainWindow;

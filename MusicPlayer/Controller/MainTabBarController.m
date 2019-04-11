@@ -8,6 +8,8 @@
 
 #import "MainTabBarController.h"
 #include "RankingTableController.h"
+#import "UIColor+Additional.h"
+#import "Color.h"
 
 @interface MainTabBarController ()
 @property (nonatomic, strong) UIView* musicBar;
@@ -18,6 +20,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.tabBar.tintColor = [UIColor colorWithHexString:APP_Color];
+    
     RankingTableController *rankingController = [[RankingTableController alloc] initWithStyle:UITableViewStylePlain];
     rankingController.tabBarItem.image = [UIImage imageNamed:@"bar_chart"];
     rankingController.tabBarItem.title = @"榜单";

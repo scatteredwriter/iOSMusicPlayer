@@ -7,18 +7,20 @@
 //
 
 #import "UIViewController+Additional.h"
+#import "UIColor+Additional.h"
+#import "Color.h"
 
 @implementation UIViewController (Additional)
 - (void)useNavigationBarWhiteTheme {
-    [UINavigationBar appearance].translucent = NO;
+    [UINavigationBar appearance].translucent = YES;
     [UINavigationBar appearance].barTintColor = [UIColor whiteColor];
-    [UINavigationBar appearance].tintColor = [UIColor blackColor];
-    [UINavigationBar appearance].titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor blackColor]};
+    [UINavigationBar appearance].tintColor = [UIColor colorWithHexString:APP_Color];
+    [UINavigationBar appearance].titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor colorWithHexString:APP_Color]};
 }
 
 - (void)useNavigationBarBlackTheme {
     [UINavigationBar appearance].translucent = NO;
-    [UINavigationBar appearance].barTintColor = [UIColor blackColor];
+    [UINavigationBar appearance].barTintColor = [UIColor colorWithHexString:APP_Color];
     [UINavigationBar appearance].tintColor = [UIColor whiteColor];
     [UINavigationBar appearance].titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
 }

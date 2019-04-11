@@ -7,12 +7,14 @@
 //
 
 #import "MusicControlBar.h"
+#import "UIColor+Additional.h"
+#import "Color.h"
 
 @implementation MusicControlBar
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = [UIColor purpleColor];
+        self.backgroundColor = [UIColor colorWithHexString:APP_Color];
     }
     return self;
 }

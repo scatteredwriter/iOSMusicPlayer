@@ -13,6 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BaseMusicCell : UITableViewCell
 @property (nonatomic, strong) MusicItem *music;
+@property (nonatomic, assign) float leftMargin;
+@property (nonatomic, assign) float rightMargin;
+@property (nonatomic, assign) float cellHeight;
+@property (nonatomic, assign) float playButtonHeightAndWidth;
+@property (nonatomic, assign) float albumImgHeightAndWidth;
+@property (nonatomic, assign) float labelWidth;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C2076586225F4CA900C37D33 /* RankingMusicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C2076585225F4CA900C37D33 /* RankingMusicCell.m */; };
+		C2076593225F8CD300C37D33 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = C2076592225F8CD300C37D33 /* Color.m */; };
 		C241A86A225DF4DD00146548 /* UIViewController+Additional.m in Sources */ = {isa = PBXBuildFile; fileRef = C241A869225DF4DD00146548 /* UIViewController+Additional.m */; };
 		C24E36A0225DC5B300B0F128 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C24E369F225DC5B300B0F128 /* MainViewController.m */; };
 		C24E36A4225DC6CE00B0F128 /* MusicControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C24E36A3225DC6CE00B0F128 /* MusicControlBar.m */; };
@@ -18,81 +20,83 @@
 		C27E8BF2225CA1E2005BA51A /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = C27E8BF1225CA1E2005BA51A /* MainTabBarController.m */; };
 		C27E8BF5225CA6BA005BA51A /* RankingTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = C27E8BF4225CA6BA005BA51A /* RankingTableController.m */; };
 		C27E8C00225CB557005BA51A /* UIColor+Additional.m in Sources */ = {isa = PBXBuildFile; fileRef = C27E8BFF225CB557005BA51A /* UIColor+Additional.m */; };
-		C27E8C02225CC0A2005BA51A /* AFNetworking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C27E8BCF225C91D9005BA51A /* AFNetworking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2ACDAC5225E02BD001C8A8C /* QQMusicAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACDAC4225E02BD001C8A8C /* QQMusicAPI.m */; };
 		C2ACDAC8225E2397001C8A8C /* RCHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACDAC7225E2397001C8A8C /* RCHTTPSessionManager.m */; };
 		C2ACDACB225E2822001C8A8C /* BaseMusicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACDACA225E2822001C8A8C /* BaseMusicCell.m */; };
 		C2ACDACE225E2887001C8A8C /* MusicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACDACD225E2887001C8A8C /* MusicItem.m */; };
-		C2ACDADB225E2EE0001C8A8C /* SDWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ACDAD8225E2EC5001C8A8C /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2CCBC7C225F3A7E00955E52 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CCBC6F225F3A6700955E52 /* AFNetworking.framework */; };
+		C2CCBC7D225F3ABC00955E52 /* AFNetworking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2CCBC6F225F3A6700955E52 /* AFNetworking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2CCBC8A225F3B1800955E52 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CCBC87225F3B0B00955E52 /* SDWebImage.framework */; };
+		C2CCBC8B225F3B2000955E52 /* SDWebImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2CCBC87225F3B0B00955E52 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C27E8BCE225C91D9005BA51A /* PBXContainerItemProxy */ = {
+		C2CCBC6E225F3A6700955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */;
+			containerPortal = C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 299522391BBF104D00859F49;
 			remoteInfo = "AFNetworking iOS";
 		};
-		C27E8BD0225C91D9005BA51A /* PBXContainerItemProxy */ = {
+		C2CCBC70225F3A6700955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */;
+			containerPortal = C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 299522651BBF129200859F49;
 			remoteInfo = "AFNetworking watchOS";
 		};
-		C27E8BD2225C91D9005BA51A /* PBXContainerItemProxy */ = {
+		C2CCBC72225F3A6700955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */;
+			containerPortal = C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 299522771BBF136400859F49;
 			remoteInfo = "AFNetworking macOS";
 		};
-		C27E8BD4225C91D9005BA51A /* PBXContainerItemProxy */ = {
+		C2CCBC74225F3A6700955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */;
+			containerPortal = C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 2987B0A51BC408A200179A4C;
 			remoteInfo = "AFNetworking tvOS";
 		};
-		C27E8BD6225C91D9005BA51A /* PBXContainerItemProxy */ = {
+		C2CCBC76225F3A6700955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */;
+			containerPortal = C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 298D7C3B1BC2C79500FD3B3E;
 			remoteInfo = "AFNetworking iOS Tests";
 		};
-		C27E8BD8225C91D9005BA51A /* PBXContainerItemProxy */ = {
+		C2CCBC78225F3A6700955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */;
+			containerPortal = C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 298D7C4A1BC2C7B200FD3B3E;
 			remoteInfo = "AFNetworking macOS Tests";
 		};
-		C27E8BDA225C91D9005BA51A /* PBXContainerItemProxy */ = {
+		C2CCBC7A225F3A6700955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */;
+			containerPortal = C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 2987B0AE1BC408A200179A4C;
 			remoteInfo = "AFNetworking tvOS Tests";
 		};
-		C2ACDAD5225E2EC5001C8A8C /* PBXContainerItemProxy */ = {
+		C2CCBC84225F3B0B00955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C2ACDACF225E2EC3001C8A8C /* SDWebImage.xcodeproj */;
+			containerPortal = C2CCBC7E225F3B0A00955E52 /* SDWebImage.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 53761325155AD0D5005750A4;
 			remoteInfo = "SDWebImage static";
 		};
-		C2ACDAD7225E2EC5001C8A8C /* PBXContainerItemProxy */ = {
+		C2CCBC86225F3B0B00955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C2ACDACF225E2EC3001C8A8C /* SDWebImage.xcodeproj */;
+			containerPortal = C2CCBC7E225F3B0A00955E52 /* SDWebImage.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 4A2CADFF1AB4BB5300B6BC39;
 			remoteInfo = SDWebImage;
 		};
-		C2ACDAD9225E2EC5001C8A8C /* PBXContainerItemProxy */ = {
+		C2CCBC88225F3B0B00955E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = C2ACDACF225E2EC3001C8A8C /* SDWebImage.xcodeproj */;
+			containerPortal = C2CCBC7E225F3B0A00955E52 /* SDWebImage.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 80B6DFEE2142B71600BCB334;
 			remoteInfo = SDWebImageMapKit;
@@ -106,14 +110,18 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2ACDADB225E2EE0001C8A8C /* SDWebImage.framework in CopyFiles */,
-				C27E8C02225CC0A2005BA51A /* AFNetworking.framework in CopyFiles */,
+				C2CCBC8B225F3B2000955E52 /* SDWebImage.framework in CopyFiles */,
+				C2CCBC7D225F3ABC00955E52 /* AFNetworking.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C2076584225F4CA900C37D33 /* RankingMusicCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RankingMusicCell.h; sourceTree = "<group>"; };
+		C2076585225F4CA900C37D33 /* RankingMusicCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RankingMusicCell.m; sourceTree = "<group>"; };
+		C2076591225F8CD300C37D33 /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
+		C2076592225F8CD300C37D33 /* Color.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Color.m; sourceTree = "<group>"; };
 		C241A868225DF4DD00146548 /* UIViewController+Additional.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Additional.h"; sourceTree = "<group>"; };
 		C241A869225DF4DD00146548 /* UIViewController+Additional.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Additional.m"; sourceTree = "<group>"; };
 		C24E369E225DC5B300B0F128 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -129,7 +137,6 @@
 		C27E8BBA225C9182005BA51A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C27E8BBC225C9182005BA51A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C27E8BBD225C9182005BA51A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AFNetworking.xcodeproj; path = "AFNetworking-master/AFNetworking.xcodeproj"; sourceTree = "<group>"; };
 		C27E8BF0225CA1E2005BA51A /* MainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		C27E8BF1225CA1E2005BA51A /* MainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		C27E8BF3225CA6BA005BA51A /* RankingTableController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RankingTableController.h; sourceTree = "<group>"; };
@@ -144,7 +151,8 @@
 		C2ACDACA225E2822001C8A8C /* BaseMusicCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseMusicCell.m; sourceTree = "<group>"; };
 		C2ACDACC225E2887001C8A8C /* MusicItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MusicItem.h; sourceTree = "<group>"; };
 		C2ACDACD225E2887001C8A8C /* MusicItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MusicItem.m; sourceTree = "<group>"; };
-		C2ACDACF225E2EC3001C8A8C /* SDWebImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDWebImage.xcodeproj; path = "SDWebImage-master/SDWebImage.xcodeproj"; sourceTree = "<group>"; };
+		C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AFNetworking.xcodeproj; path = "AFNetworking-master/AFNetworking.xcodeproj"; sourceTree = "<group>"; };
+		C2CCBC7E225F3B0A00955E52 /* SDWebImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDWebImage.xcodeproj; path = "SDWebImage-master/SDWebImage.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +160,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2CCBC8A225F3B1800955E52 /* SDWebImage.framework in Frameworks */,
+				C2CCBC7C225F3A7E00955E52 /* AFNetworking.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,6 +171,8 @@
 		C241A873225DF82F00146548 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				C2076591225F8CD300C37D33 /* Color.h */,
+				C2076592225F8CD300C37D33 /* Color.m */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -172,6 +184,8 @@
 				C24E36A3225DC6CE00B0F128 /* MusicControlBar.m */,
 				C2ACDAC9225E2822001C8A8C /* BaseMusicCell.h */,
 				C2ACDACA225E2822001C8A8C /* BaseMusicCell.m */,
+				C2076584225F4CA900C37D33 /* RankingMusicCell.h */,
+				C2076585225F4CA900C37D33 /* RankingMusicCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -179,8 +193,8 @@
 		C27E8BA2225C9181005BA51A = {
 			isa = PBXGroup;
 			children = (
-				C2ACDACF225E2EC3001C8A8C /* SDWebImage.xcodeproj */,
-				C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */,
+				C2CCBC7E225F3B0A00955E52 /* SDWebImage.xcodeproj */,
+				C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */,
 				C27E8BAD225C9181005BA51A /* MusicPlayer */,
 				C27E8BAC225C9181005BA51A /* Products */,
 				C27E8BDC225C924C005BA51A /* Frameworks */,
@@ -211,20 +225,6 @@
 				C27E8BBD225C9182005BA51A /* main.m */,
 			);
 			path = MusicPlayer;
-			sourceTree = "<group>";
-		};
-		C27E8BC5225C91D9005BA51A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				C27E8BCF225C91D9005BA51A /* AFNetworking.framework */,
-				C27E8BD1225C91D9005BA51A /* AFNetworking.framework */,
-				C27E8BD3225C91D9005BA51A /* AFNetworking.framework */,
-				C27E8BD5225C91D9005BA51A /* AFNetworking.framework */,
-				C27E8BD7225C91D9005BA51A /* AFNetworking iOS Tests.xctest */,
-				C27E8BD9225C91D9005BA51A /* AFNetworking macOS Tests.xctest */,
-				C27E8BDB225C91D9005BA51A /* AFNetworking tvOS Tests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		C27E8BDC225C924C005BA51A /* Frameworks */ = {
@@ -273,12 +273,26 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		C2ACDAD0225E2EC3001C8A8C /* Products */ = {
+		C2CCBC65225F3A6600955E52 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C2ACDAD6225E2EC5001C8A8C /* libSDWebImage.a */,
-				C2ACDAD8225E2EC5001C8A8C /* SDWebImage.framework */,
-				C2ACDADA225E2EC5001C8A8C /* SDWebImageMapKit.framework */,
+				C2CCBC6F225F3A6700955E52 /* AFNetworking.framework */,
+				C2CCBC71225F3A6700955E52 /* AFNetworking.framework */,
+				C2CCBC73225F3A6700955E52 /* AFNetworking.framework */,
+				C2CCBC75225F3A6700955E52 /* AFNetworking.framework */,
+				C2CCBC77225F3A6700955E52 /* AFNetworking iOS Tests.xctest */,
+				C2CCBC79225F3A6700955E52 /* AFNetworking macOS Tests.xctest */,
+				C2CCBC7B225F3A6700955E52 /* AFNetworking tvOS Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C2CCBC7F225F3B0A00955E52 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C2CCBC85225F3B0B00955E52 /* libSDWebImage.a */,
+				C2CCBC87225F3B0B00955E52 /* SDWebImage.framework */,
+				C2CCBC89225F3B0B00955E52 /* SDWebImageMapKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -331,12 +345,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = C27E8BC5225C91D9005BA51A /* Products */;
-					ProjectRef = C27E8BC4225C91D9005BA51A /* AFNetworking.xcodeproj */;
+					ProductGroup = C2CCBC65225F3A6600955E52 /* Products */;
+					ProjectRef = C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */;
 				},
 				{
-					ProductGroup = C2ACDAD0225E2EC3001C8A8C /* Products */;
-					ProjectRef = C2ACDACF225E2EC3001C8A8C /* SDWebImage.xcodeproj */;
+					ProductGroup = C2CCBC7F225F3B0A00955E52 /* Products */;
+					ProjectRef = C2CCBC7E225F3B0A00955E52 /* SDWebImage.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -347,74 +361,74 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		C27E8BCF225C91D9005BA51A /* AFNetworking.framework */ = {
+		C2CCBC6F225F3A6700955E52 /* AFNetworking.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AFNetworking.framework;
-			remoteRef = C27E8BCE225C91D9005BA51A /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC6E225F3A6700955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C27E8BD1225C91D9005BA51A /* AFNetworking.framework */ = {
+		C2CCBC71225F3A6700955E52 /* AFNetworking.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AFNetworking.framework;
-			remoteRef = C27E8BD0225C91D9005BA51A /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC70225F3A6700955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C27E8BD3225C91D9005BA51A /* AFNetworking.framework */ = {
+		C2CCBC73225F3A6700955E52 /* AFNetworking.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AFNetworking.framework;
-			remoteRef = C27E8BD2225C91D9005BA51A /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC72225F3A6700955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C27E8BD5225C91D9005BA51A /* AFNetworking.framework */ = {
+		C2CCBC75225F3A6700955E52 /* AFNetworking.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AFNetworking.framework;
-			remoteRef = C27E8BD4225C91D9005BA51A /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC74225F3A6700955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C27E8BD7225C91D9005BA51A /* AFNetworking iOS Tests.xctest */ = {
+		C2CCBC77225F3A6700955E52 /* AFNetworking iOS Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "AFNetworking iOS Tests.xctest";
-			remoteRef = C27E8BD6225C91D9005BA51A /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC76225F3A6700955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C27E8BD9225C91D9005BA51A /* AFNetworking macOS Tests.xctest */ = {
+		C2CCBC79225F3A6700955E52 /* AFNetworking macOS Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "AFNetworking macOS Tests.xctest";
-			remoteRef = C27E8BD8225C91D9005BA51A /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC78225F3A6700955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C27E8BDB225C91D9005BA51A /* AFNetworking tvOS Tests.xctest */ = {
+		C2CCBC7B225F3A6700955E52 /* AFNetworking tvOS Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "AFNetworking tvOS Tests.xctest";
-			remoteRef = C27E8BDA225C91D9005BA51A /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC7A225F3A6700955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C2ACDAD6225E2EC5001C8A8C /* libSDWebImage.a */ = {
+		C2CCBC85225F3B0B00955E52 /* libSDWebImage.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libSDWebImage.a;
-			remoteRef = C2ACDAD5225E2EC5001C8A8C /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC84225F3B0B00955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C2ACDAD8225E2EC5001C8A8C /* SDWebImage.framework */ = {
+		C2CCBC87225F3B0B00955E52 /* SDWebImage.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = SDWebImage.framework;
-			remoteRef = C2ACDAD7225E2EC5001C8A8C /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC86225F3B0B00955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C2ACDADA225E2EC5001C8A8C /* SDWebImageMapKit.framework */ = {
+		C2CCBC89225F3B0B00955E52 /* SDWebImageMapKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = SDWebImageMapKit.framework;
-			remoteRef = C2ACDAD9225E2EC5001C8A8C /* PBXContainerItemProxy */;
+			remoteRef = C2CCBC88225F3B0B00955E52 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -440,6 +454,7 @@
 				C2ACDAC8225E2397001C8A8C /* RCHTTPSessionManager.m in Sources */,
 				C2ACDACB225E2822001C8A8C /* BaseMusicCell.m in Sources */,
 				C24E36A4225DC6CE00B0F128 /* MusicControlBar.m in Sources */,
+				C2076586225F4CA900C37D33 /* RankingMusicCell.m in Sources */,
 				C256D50C225DDFCB00E5842F /* RankingDetailTableController.m in Sources */,
 				C241A86A225DF4DD00146548 /* UIViewController+Additional.m in Sources */,
 				C2ACDAC5225E02BD001C8A8C /* QQMusicAPI.m in Sources */,
@@ -447,6 +462,7 @@
 				C27E8C00225CB557005BA51A /* UIColor+Additional.m in Sources */,
 				C2ACDACE225E2887001C8A8C /* MusicItem.m in Sources */,
 				C27E8BF5225CA6BA005BA51A /* RankingTableController.m in Sources */,
+				C2076593225F8CD300C37D33 /* Color.m in Sources */,
 				C27E8BB0225C9181005BA51A /* AppDelegate.m in Sources */,
 				C27E8BF2225CA1E2005BA51A /* MainTabBarController.m in Sources */,
 			);

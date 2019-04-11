@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *songMid;
 @property (nonatomic, copy) NSString *mediaMid;
 @property (nonatomic, copy) NSString *albumMid;
+@property (nonatomic, assign) BOOL payPlay;
 @end
 
 NS_ASSUME_NONNULL_END

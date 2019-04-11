@@ -8,6 +8,7 @@
 
 #import "RankingTableController.h"
 #import "UIColor+Additional.h"
+#import "UIViewController+Additional.h"
 #import "RankingDetailTableController.h"
 
 #define CELL_HEIGHT 200

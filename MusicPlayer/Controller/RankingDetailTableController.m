@@ -7,15 +7,19 @@
 //
 
 #import "UIColor+Additional.h"
+#import "UIViewController+Additional.h"
 #import "RankingDetailTableController.h"
 #import <AFNetworking/AFNetworking.h>
 #import "RCHTTPSessionManager.h"
 #import "QQMusicAPI.h"
-#import "BaseMusicCell.h"
+#import "RankingMusicCell.h"
+#import "MusicItem.h"
+
+#define CELL_HEIGHT 80
 
 @interface RankingDetailTableController ()
 @property (nonatomic, assign) int index;
-@property (nonatomic, strong) NSDictionary *data;
+@property (nonatomic, strong) NSArray *data;
 @end
 
 @implementation RankingDetailTableController
@@ -31,7 +35,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.tableView registerClass:BaseMusicCell.class forCellReuseIdentifier:@"BaseMusicCell"];
+    [self.tableView registerClass:RankingMusicCell.class forCellReuseIdentifier:@"RankingMusicCell"];
+    self.tableView.separatorInset = UIEdgeInsetsZero;
+    self.tableView.allowsSelection = YES;
     switch (self.index) {
         case 4:
             self.title = @"流行指数";
@@ -64,8 +70,7 @@
     RCHTTPSessionManager *manager = [RCHTTPSessionManager getRCHTTPSessionManager];
     __weak RankingDetailTableController *w_self = self;
     [manager GET:api parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSLog(@"%@",responseObject);
-        w_self.data = responseObject;
+        w_self.data = responseObject[@"songlist"];
         [w_self.tableView reloadData];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"error\n%@",error.localizedDescription);
@@ -82,18 +87,37 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (!self.data)
         return 0;
-    return ((NSDictionary *)self.data[@"songlist"]).count;
+    return self.data.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BaseMusicCell" forIndexPath:indexPath];
-    
+    RankingMusicCell *cell = [tableView dequeueReusableCellWithIdentifier:@"RankingMusicCell" forIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.cellHeight = CELL_HEIGHT;
+    if (self.data && self.data.count > indexPath.row) {
+        int idx = (int)indexPath.row;
+        MusicItem *item = [[MusicItem alloc] init];
+        item.songName = self.data[idx][@"data"][@"songname"];
+        item.songMid = self.data[idx][@"data"][@"songmid"];
+        item.mediaMid = self.data[idx][@"data"][@"strMediaMid"];
+        item.albumMid = self.data[idx][@"data"][@"albummid"];
+        item.albumName = self.data[idx][@"data"][@"albumname"];
+        NSMutableString *singerName = [[NSMutableString alloc] init];
+        for (NSDictionary *singerItem in self.data[idx][@"data"][@"singer"]) {
+            [singerName appendFormat:@"%@/", singerItem[@"name"]];
+        }
+        [singerName replaceCharactersInRange:NSMakeRange(singerName.length - 1, 1) withString:@""];
+        item.singerName = singerName;
+        item.payPlay = [(NSString *)(self.data[idx][@"data"][@"pay"][@"payplay"]) boolValue];
+        cell.music = item;
+        cell.ranking = idx + 1;
+    }
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 100;
+    return CELL_HEIGHT;
 }
 
 /*
