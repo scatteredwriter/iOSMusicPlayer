@@ -23,10 +23,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self useNavigationBarWhiteTheme];
+    [self useNavigationBarBlackTheme];
     
     MainTabBarController *mainTabBarController = [[MainTabBarController alloc] init];
     self.mainWindow = [[UIWindow alloc] init];
+    self.mainWindow.backgroundColor = [UIColor whiteColor];
     self.mainWindow.rootViewController = mainTabBarController;
     [self.mainWindow makeKeyAndVisible];
     [self.view addSubview:self.mainWindow];
@@ -40,5 +41,12 @@
     
     self.mainWindow.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - MUSIC_CONTROL_BAR_HEIGHT);
     self.musicControlBar.frame = CGRectMake(0, CGRectGetMaxY(self.mainWindow.frame), CGRectGetWidth(self.view.frame), MUSIC_CONTROL_BAR_HEIGHT);
+    
+    [self setNeedsStatusBarAppearanceUpdate];
 }
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
+
 @end

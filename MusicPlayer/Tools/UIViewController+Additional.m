@@ -19,7 +19,7 @@
 }
 
 - (void)useNavigationBarBlackTheme {
-    [UINavigationBar appearance].translucent = NO;
+    [UINavigationBar appearance].translucent = YES;
     [UINavigationBar appearance].barTintColor = [UIColor colorWithHexString:APP_Color];
     [UINavigationBar appearance].tintColor = [UIColor whiteColor];
     [UINavigationBar appearance].titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};

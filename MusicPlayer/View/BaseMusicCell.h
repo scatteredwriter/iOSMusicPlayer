@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) float leftMargin;
 @property (nonatomic, assign) float rightMargin;
 @property (nonatomic, assign) float cellHeight;
-@property (nonatomic, assign) float playButtonHeightAndWidth;
+@property (nonatomic, assign) float addButtonHeightAndWidth;
 @property (nonatomic, assign) float albumImgHeightAndWidth;
 @property (nonatomic, assign) float labelWidth;
 @end

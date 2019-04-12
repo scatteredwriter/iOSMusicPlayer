@@ -8,7 +8,6 @@
 
 #import "RankingTableController.h"
 #import "UIColor+Additional.h"
-#import "UIViewController+Additional.h"
 #import "RankingDetailTableController.h"
 
 #define CELL_HEIGHT 200
@@ -77,15 +76,11 @@ float _margin = 20;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.title = @"榜单";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.allowsSelection = NO;
     [self.tableView registerClass:RankingCell.class forCellReuseIdentifier:@"RankingCell"];
     
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)buttonClickedHandler:(UIButton *)button {

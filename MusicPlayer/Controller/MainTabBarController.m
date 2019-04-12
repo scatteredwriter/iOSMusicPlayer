@@ -7,7 +7,8 @@
 //
 
 #import "MainTabBarController.h"
-#include "RankingTableController.h"
+#import "RankingTableController.h"
+#import "SearchTableController.h"
 #import "UIColor+Additional.h"
 #import "Color.h"
 
@@ -26,8 +27,14 @@
     RankingTableController *rankingController = [[RankingTableController alloc] initWithStyle:UITableViewStylePlain];
     rankingController.tabBarItem.image = [UIImage imageNamed:@"bar_chart"];
     rankingController.tabBarItem.title = @"榜单";
+    
+    SearchTableController *searchController = [[SearchTableController alloc] initWithStyle:UITableViewStylePlain];
+    searchController.tabBarItem.image = [UIImage imageNamed:@"search"];
+    searchController.tabBarItem.title = @"搜索";
+    
     self.viewControllers = @[
-                             [[UINavigationController alloc] initWithRootViewController:rankingController]
+                             [[UINavigationController alloc] initWithRootViewController:rankingController],
+                             [[UINavigationController alloc] initWithRootViewController:searchController]
                              ];
     self.selectedIndex = 0;
 }

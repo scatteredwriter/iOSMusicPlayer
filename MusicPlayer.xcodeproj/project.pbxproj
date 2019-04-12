@@ -24,6 +24,8 @@
 		C2ACDAC8225E2397001C8A8C /* RCHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACDAC7225E2397001C8A8C /* RCHTTPSessionManager.m */; };
 		C2ACDACB225E2822001C8A8C /* BaseMusicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACDACA225E2822001C8A8C /* BaseMusicCell.m */; };
 		C2ACDACE225E2887001C8A8C /* MusicItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACDACD225E2887001C8A8C /* MusicItem.m */; };
+		C2CB33D522607CEA00F77B1A /* SearchTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB33D422607CEA00F77B1A /* SearchTableController.m */; };
+		C2CB33E92260B2A700F77B1A /* NSString+Additional.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CB33E82260B2A700F77B1A /* NSString+Additional.m */; };
 		C2CCBC7C225F3A7E00955E52 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CCBC6F225F3A6700955E52 /* AFNetworking.framework */; };
 		C2CCBC7D225F3ABC00955E52 /* AFNetworking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2CCBC6F225F3A6700955E52 /* AFNetworking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2CCBC8A225F3B1800955E52 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CCBC87225F3B0B00955E52 /* SDWebImage.framework */; };
@@ -151,6 +153,10 @@
 		C2ACDACA225E2822001C8A8C /* BaseMusicCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseMusicCell.m; sourceTree = "<group>"; };
 		C2ACDACC225E2887001C8A8C /* MusicItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MusicItem.h; sourceTree = "<group>"; };
 		C2ACDACD225E2887001C8A8C /* MusicItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MusicItem.m; sourceTree = "<group>"; };
+		C2CB33D322607CEA00F77B1A /* SearchTableController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchTableController.h; sourceTree = "<group>"; };
+		C2CB33D422607CEA00F77B1A /* SearchTableController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchTableController.m; sourceTree = "<group>"; };
+		C2CB33E72260B2A700F77B1A /* NSString+Additional.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Additional.h"; sourceTree = "<group>"; };
+		C2CB33E82260B2A700F77B1A /* NSString+Additional.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Additional.m"; sourceTree = "<group>"; };
 		C2CCBC64225F3A6600955E52 /* AFNetworking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AFNetworking.xcodeproj; path = "AFNetworking-master/AFNetworking.xcodeproj"; sourceTree = "<group>"; };
 		C2CCBC7E225F3B0A00955E52 /* SDWebImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDWebImage.xcodeproj; path = "SDWebImage-master/SDWebImage.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -245,6 +251,8 @@
 				C24E369F225DC5B300B0F128 /* MainViewController.m */,
 				C256D50A225DDFCB00E5842F /* RankingDetailTableController.h */,
 				C256D50B225DDFCB00E5842F /* RankingDetailTableController.m */,
+				C2CB33D322607CEA00F77B1A /* SearchTableController.h */,
+				C2CB33D422607CEA00F77B1A /* SearchTableController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -258,6 +266,8 @@
 				C241A869225DF4DD00146548 /* UIViewController+Additional.m */,
 				C2ACDAC6225E2397001C8A8C /* RCHTTPSessionManager.h */,
 				C2ACDAC7225E2397001C8A8C /* RCHTTPSessionManager.m */,
+				C2CB33E72260B2A700F77B1A /* NSString+Additional.h */,
+				C2CB33E82260B2A700F77B1A /* NSString+Additional.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -454,6 +464,7 @@
 				C2ACDAC8225E2397001C8A8C /* RCHTTPSessionManager.m in Sources */,
 				C2ACDACB225E2822001C8A8C /* BaseMusicCell.m in Sources */,
 				C24E36A4225DC6CE00B0F128 /* MusicControlBar.m in Sources */,
+				C2CB33D522607CEA00F77B1A /* SearchTableController.m in Sources */,
 				C2076586225F4CA900C37D33 /* RankingMusicCell.m in Sources */,
 				C256D50C225DDFCB00E5842F /* RankingDetailTableController.m in Sources */,
 				C241A86A225DF4DD00146548 /* UIViewController+Additional.m in Sources */,
@@ -461,6 +472,7 @@
 				C24E36A0225DC5B300B0F128 /* MainViewController.m in Sources */,
 				C27E8C00225CB557005BA51A /* UIColor+Additional.m in Sources */,
 				C2ACDACE225E2887001C8A8C /* MusicItem.m in Sources */,
+				C2CB33E92260B2A700F77B1A /* NSString+Additional.m in Sources */,
 				C27E8BF5225CA6BA005BA51A /* RankingTableController.m in Sources */,
 				C2076593225F8CD300C37D33 /* Color.m in Sources */,
 				C27E8BB0225C9181005BA51A /* AppDelegate.m in Sources */,

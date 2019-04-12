@@ -7,7 +7,6 @@
 //
 
 #import "UIColor+Additional.h"
-#import "UIViewController+Additional.h"
 #import "RankingDetailTableController.h"
 #import <AFNetworking/AFNetworking.h>
 #import "RCHTTPSessionManager.h"
@@ -19,7 +18,8 @@
 
 @interface RankingDetailTableController ()
 @property (nonatomic, assign) int index;
-@property (nonatomic, strong) NSArray *data;
+@property (nonatomic, copy) NSArray *data;
+@property (nonatomic, strong) NSMutableArray *musics;
 @end
 
 @implementation RankingDetailTableController
@@ -36,8 +36,8 @@
     [super viewDidLoad];
     
     [self.tableView registerClass:RankingMusicCell.class forCellReuseIdentifier:@"RankingMusicCell"];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.separatorInset = UIEdgeInsetsZero;
-    self.tableView.allowsSelection = YES;
     switch (self.index) {
         case 4:
             self.title = @"流行指数";
@@ -60,17 +60,14 @@
     [self getData];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = NO;
-}
-
 - (void)getData {
-    NSString *api = [NSString stringWithFormat:RankingAPI, [NSString stringWithFormat:@"%d", self.index]];
+    NSString *url = [NSString stringWithFormat:RankingAPI, self.index];
+    url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     RCHTTPSessionManager *manager = [RCHTTPSessionManager getRCHTTPSessionManager];
     __weak RankingDetailTableController *w_self = self;
-    [manager GET:api parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager GET:url parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         w_self.data = responseObject[@"songlist"];
+        [w_self createMusics];
         [w_self.tableView reloadData];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"error\n%@",error.localizedDescription);
@@ -78,24 +75,11 @@
     
 }
 
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (!self.data)
-        return 0;
-    return self.data.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    RankingMusicCell *cell = [tableView dequeueReusableCellWithIdentifier:@"RankingMusicCell" forIndexPath:indexPath];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.cellHeight = CELL_HEIGHT;
-    if (self.data && self.data.count > indexPath.row) {
-        int idx = (int)indexPath.row;
+- (void)createMusics {
+    if (!self.data || self.data.count <= 0)
+        return;
+    self.musics = [[NSMutableArray alloc] initWithCapacity:self.data.count];
+    for (int idx = 0; idx < self.data.count; idx++) {
         MusicItem *item = [[MusicItem alloc] init];
         item.songName = self.data[idx][@"data"][@"songname"];
         item.songMid = self.data[idx][@"data"][@"songmid"];
@@ -109,8 +93,39 @@
         [singerName replaceCharactersInRange:NSMakeRange(singerName.length - 1, 1) withString:@""];
         item.singerName = singerName;
         item.payPlay = [(NSString *)(self.data[idx][@"data"][@"pay"][@"payplay"]) boolValue];
+        
+        [self.musics addObject:item];
+    }
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (!self.musics)
+        return 0;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    return self.musics.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    RankingMusicCell *cell = [tableView dequeueReusableCellWithIdentifier:@"RankingMusicCell" forIndexPath:indexPath];
+    cell.cellHeight = CELL_HEIGHT;
+    if (self.musics.count > indexPath.row) {
+        int idx = (int)indexPath.row;
+        MusicItem *item = self.musics[idx];
         cell.music = item;
         cell.ranking = idx + 1;
+        
+        if (cell.music.payPlay) {
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        else {
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        }
     }
     
     return cell;
@@ -120,48 +135,8 @@
     return CELL_HEIGHT;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

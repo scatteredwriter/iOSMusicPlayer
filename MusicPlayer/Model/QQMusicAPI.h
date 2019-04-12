@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * const RankingAPI;
+extern NSString * const SearchAPI;
 extern NSString * const musicUrlAPI;
 extern NSString * const albumImgUrlAPI;
 
