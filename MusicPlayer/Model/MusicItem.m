@@ -10,8 +10,10 @@
 #import "QQMusicAPI.h"
 
 @implementation MusicItem
+
 - (void)setAlbumMid:(NSString *)albumMid {
     _albumMid = albumMid;
     self.albumImgUrl = [NSString stringWithFormat:albumImgUrlAPI, _albumMid];
 }
+
 @end

@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *singerName;
 @property (nonatomic, copy) NSString *albumName;
 @property (nonatomic, copy) NSString *albumImgUrl;
-@property (nonatomic, copy) NSString *musicUrl;
+@property (nullable, nonatomic, copy) NSString *musicUrl;
 @property (nonatomic, copy) NSString *songMid;
 @property (nonatomic, copy) NSString *mediaMid;
 @property (nonatomic, copy) NSString *albumMid;

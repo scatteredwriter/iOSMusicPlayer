@@ -8,7 +8,9 @@
 
 #import "MusicControlBar.h"
 #import "UIColor+Additional.h"
+#import "MusicItem.h"
 #import "Color.h"
+#import "NotificationName.h"
 #import <SDWebImage/SDWebImage.h>
 
 #define MUSIC_CONTROL_BAR_HEIGHT 70
@@ -19,6 +21,7 @@
 @property (nonatomic, strong) UILabel *descLabel;
 @property (nonatomic, strong) UIButton *playButton;
 @property (nonatomic, strong) UIButton *playListButton;
+@property (nonatomic, assign) BOOL isPause;
 @end
 
 @implementation MusicControlBar
@@ -36,15 +39,15 @@
         [self addSubview:_whiteView];
         [self addSubview:_effectView];
         
+        self.isPause = YES;
+        
         self.songNameLabel = [[UILabel alloc] init];
         self.songNameLabel.font = [UIFont systemFontOfSize:15];
-        self.songNameLabel.text = @"画沙";
         self.songNameLabel.textColor = [UIColor colorWithHexString:Title_Color];
         [self addSubview:self.songNameLabel];
         
         self.descLabel = [[UILabel alloc] init];
         self.descLabel.font = [UIFont systemFontOfSize:11];
-        self.descLabel.text = @"周杰伦 - 画沙";
         self.descLabel.textColor = [UIColor colorWithHexString:Second_Color];
         [self addSubview:self.descLabel];
         
@@ -55,6 +58,7 @@
         [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateHighlighted];
         self.playButton.contentEdgeInsets = UIEdgeInsetsZero;
         self.playButton.enabled = NO;
+        [self.playButton addTarget:self action:@selector(playButtonClickHandler) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.playButton];
         
         self.playListButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -63,15 +67,20 @@
         [self.playListButton setImage:[UIImage imageNamed:@"list"] forState:UIControlStateNormal];
         [self.playListButton setImage:[UIImage imageNamed:@"list"] forState:UIControlStateHighlighted];
         self.playListButton.contentEdgeInsets = UIEdgeInsetsZero;
-        self.playListButton.enabled = NO;
         [self addSubview:self.playListButton];
         
         self.albumImgView = [[UIImageView alloc] init];
-        [self.albumImgView sd_setImageWithURL:@"https://y.gtimg.cn/music/photo_new/T002R500x500M000002ldC3J1GUVlt.jpg?max_age=2592000"];
+        [self.albumImgView setImage:[UIImage imageNamed:@"cd"]];
         [self addSubview:self.albumImgView];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCurMusic:) name:RCPlayerPlayMusicNotification object:nil];
         
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)layoutSubviews {
@@ -98,6 +107,35 @@
     self.playListButton.frame = CGRectMake(CGRectGetWidth(self.frame) - rightMargin - buttonHeightAndWidth, (MUSIC_CONTROL_BAR_HEIGHT - buttonHeightAndWidth) / 2, buttonHeightAndWidth, buttonHeightAndWidth);
     
     self.playButton.frame = CGRectMake(CGRectGetMinX(self.playListButton.frame) - buttonHeightAndWidth - 20, (MUSIC_CONTROL_BAR_HEIGHT - buttonHeightAndWidth) / 2, buttonHeightAndWidth, buttonHeightAndWidth);
+}
+
+- (void)updateCurMusic:(NSNotification *)notification {
+    MusicItem *newMusic = notification.userInfo[@"music"];
+    if (!newMusic)
+        return;
+    
+    self.isPause = NO;
+    [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumImgUrl] placeholderImage:nil];
+    self.songNameLabel.text = newMusic.songName;
+    self.descLabel.text = [NSString stringWithFormat:@"%@ - %@", newMusic.singerName, newMusic.albumName];
+    [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+    [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateHighlighted];
+    self.playButton.enabled = YES;
+    [self setNeedsLayout];
+}
+
+- (void)playButtonClickHandler {
+    if (self.isPause) {
+        [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+        [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateHighlighted];
+        self.isPause = NO;
+    }
+    else {
+        [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+        [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateHighlighted];
+        self.isPause = YES;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerPauseMusicNotification object:nil userInfo:@{@"isPause":[NSNumber numberWithBool:self.isPause]}];
 }
 
 @end

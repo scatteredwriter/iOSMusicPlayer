@@ -13,6 +13,7 @@
 #import "QQMusicAPI.h"
 #import "RankingMusicCell.h"
 #import "MusicItem.h"
+#import "RCPlayer.h"
 
 #define CELL_HEIGHT 80
 
@@ -137,6 +138,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if (indexPath.row >= self.musics.count)
+        return;
+    
+    int idx = (int)indexPath.row;
+    MusicItem *item = self.musics[idx];
+    if (item.payPlay)
+        return;
+    [[RCPlayer sharedPlayer] playMusic:item];
 }
 
 @end

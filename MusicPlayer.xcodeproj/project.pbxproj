@@ -12,6 +12,8 @@
 		C241A86A225DF4DD00146548 /* UIViewController+Additional.m in Sources */ = {isa = PBXBuildFile; fileRef = C241A869225DF4DD00146548 /* UIViewController+Additional.m */; };
 		C24E36A0225DC5B300B0F128 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C24E369F225DC5B300B0F128 /* MainViewController.m */; };
 		C24E36A4225DC6CE00B0F128 /* MusicControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C24E36A3225DC6CE00B0F128 /* MusicControlBar.m */; };
+		C24F53EF226226A200A843F4 /* RCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F53EE226226A200A843F4 /* RCPlayer.m */; };
+		C24F53FC22622B9000A843F4 /* NotificationName.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F53FB22622B9000A843F4 /* NotificationName.m */; };
 		C256D50C225DDFCB00E5842F /* RankingDetailTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = C256D50B225DDFCB00E5842F /* RankingDetailTableController.m */; };
 		C27E8BB0225C9181005BA51A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C27E8BAF225C9181005BA51A /* AppDelegate.m */; };
 		C27E8BB8225C9182005BA51A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C27E8BB7225C9182005BA51A /* Assets.xcassets */; };
@@ -130,6 +132,10 @@
 		C24E369F225DC5B300B0F128 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		C24E36A2225DC6CE00B0F128 /* MusicControlBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MusicControlBar.h; sourceTree = "<group>"; };
 		C24E36A3225DC6CE00B0F128 /* MusicControlBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MusicControlBar.m; sourceTree = "<group>"; };
+		C24F53ED226226A200A843F4 /* RCPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCPlayer.h; sourceTree = "<group>"; };
+		C24F53EE226226A200A843F4 /* RCPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCPlayer.m; sourceTree = "<group>"; };
+		C24F53FA22622B9000A843F4 /* NotificationName.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationName.h; sourceTree = "<group>"; };
+		C24F53FB22622B9000A843F4 /* NotificationName.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationName.m; sourceTree = "<group>"; };
 		C256D50A225DDFCB00E5842F /* RankingDetailTableController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RankingDetailTableController.h; sourceTree = "<group>"; };
 		C256D50B225DDFCB00E5842F /* RankingDetailTableController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RankingDetailTableController.m; sourceTree = "<group>"; };
 		C27E8BAB225C9181005BA51A /* MusicPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -179,6 +185,8 @@
 			children = (
 				C2076591225F8CD300C37D33 /* Color.h */,
 				C2076592225F8CD300C37D33 /* Color.m */,
+				C24F53FA22622B9000A843F4 /* NotificationName.h */,
+				C24F53FB22622B9000A843F4 /* NotificationName.m */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -268,6 +276,8 @@
 				C2ACDAC7225E2397001C8A8C /* RCHTTPSessionManager.m */,
 				C2CB33E72260B2A700F77B1A /* NSString+Additional.h */,
 				C2CB33E82260B2A700F77B1A /* NSString+Additional.m */,
+				C24F53ED226226A200A843F4 /* RCPlayer.h */,
+				C24F53EE226226A200A843F4 /* RCPlayer.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -339,6 +349,11 @@
 				TargetAttributes = {
 					C27E8BAA225C9181005BA51A = {
 						CreatedOnToolsVersion = 10.2;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -469,6 +484,7 @@
 				C256D50C225DDFCB00E5842F /* RankingDetailTableController.m in Sources */,
 				C241A86A225DF4DD00146548 /* UIViewController+Additional.m in Sources */,
 				C2ACDAC5225E02BD001C8A8C /* QQMusicAPI.m in Sources */,
+				C24F53EF226226A200A843F4 /* RCPlayer.m in Sources */,
 				C24E36A0225DC5B300B0F128 /* MainViewController.m in Sources */,
 				C27E8C00225CB557005BA51A /* UIColor+Additional.m in Sources */,
 				C2ACDACE225E2887001C8A8C /* MusicItem.m in Sources */,
@@ -477,6 +493,7 @@
 				C2076593225F8CD300C37D33 /* Color.m in Sources */,
 				C27E8BB0225C9181005BA51A /* AppDelegate.m in Sources */,
 				C27E8BF2225CA1E2005BA51A /* MainTabBarController.m in Sources */,
+				C24F53FC22622B9000A843F4 /* NotificationName.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

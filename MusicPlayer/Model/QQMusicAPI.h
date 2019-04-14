@@ -14,5 +14,6 @@ extern NSString * const RankingAPI;
 extern NSString * const SearchAPI;
 extern NSString * const musicUrlAPI;
 extern NSString * const albumImgUrlAPI;
+extern NSString * const VKeyAPI;
 
 NS_ASSUME_NONNULL_END

@@ -13,7 +13,7 @@
     RCHTTPSessionManager *manager = [super manager];
     NSMutableSet *set = [NSMutableSet set];
     set.set = manager.responseSerializer.acceptableContentTypes;
-    [set addObjectsFromArray:@[@"text/html", @"application/x-javascript"]];
+    [set addObjectsFromArray:@[@"text/html", @"application/x-javascript", @"text/plain", @"application/octet-stream", @""]];
     manager.responseSerializer.acceptableContentTypes = set;
     return manager;
 }
