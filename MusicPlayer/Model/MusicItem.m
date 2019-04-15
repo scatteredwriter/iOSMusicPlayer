@@ -13,7 +13,8 @@
 
 - (void)setAlbumMid:(NSString *)albumMid {
     _albumMid = albumMid;
-    self.albumImgUrl = [NSString stringWithFormat:albumImgUrlAPI, _albumMid];
+    self.albumImgUrl = [NSString stringWithFormat:albumImgUrlAPI, 300, 300, _albumMid];
+    self.albumLargeImgUrl = [NSString stringWithFormat:albumImgUrlAPI, 500, 500, _albumMid];
 }
 
 @end

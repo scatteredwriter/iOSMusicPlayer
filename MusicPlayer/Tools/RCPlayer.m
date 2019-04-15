@@ -36,8 +36,8 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
             // 监听播放完成
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playFinished:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
             
-            // 监听音乐暂停
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseCurMusic:) name:RCPlayerPauseMusicNotification object:nil];
+            // 监听音乐播放或暂停
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseCurMusic:) name:RCPlayerPlayOrPauseMusicNotification object:nil];
             
             if(!_periodicTimeObserver) {
                 // 监听播放进度，(1.0/1.0)秒监听一次
@@ -100,20 +100,22 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 }
 
 - (void)pauseCurMusic:(NSNotification *)notification {
-    if (!notification.userInfo)
-        return;
+//    if (!notification.userInfo)
+//        return;
     NSLog(@"[RCPlayer pauseCurMusic:]: get message.");
     if (self.curPlayerItem && self.curPlayerItem.status == AVPlayerItemStatusReadyToPlay) {
 //        BOOL isPuase = [notification.userInfo[@"isPause"] boolValue];
         if (_isPause) {
-            NSLog(@"[RCPlayer pauseCurMusic:]: PAUSE.");
-            [self p_play];
+            NSLog(@"[RCPlayer pauseCurMusic:]: PLAY.");
+            [_player play];
+            self.isPause = NO;
         }
         else {
-            NSLog(@"[RCPlayer pauseCurMusic:]: PLAY.");
-            [self p_pause];
+            NSLog(@"[RCPlayer pauseCurMusic:]: PAUSE.");
+            [_player pause];
+            self.isPause = YES;
         }
-    }
+    } 
     [self configNowPlayingInfoCenter];
 }
 
@@ -172,11 +174,13 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 - (void)p_play {
     [_player play];
     self.isPause = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerPlayOrPauseUINotification object:nil userInfo:@{@"isPause":[NSNumber numberWithBool:self.isPause]}];
 }
 
 - (void)p_pause {
     [_player pause];
     self.isPause = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerPlayOrPauseUINotification object:nil userInfo:@{@"isPause":[NSNumber numberWithBool:self.isPause]}];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -198,7 +202,7 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
                 _status = RCPlayerStatusReadyToPlay;
                 [self p_play];
                 //发送播放通知
-                [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerPlayMusicNotification object:nil userInfo:@{@"music":self.curMusic}];
+                [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerUpdateCurrentMusicNotification object:nil userInfo:@{@"music":self.curMusic}];
                 //处理远程控制
                 [self remoteControlEventHandler];
                 [self configNowPlayingInfoCenter];
@@ -222,6 +226,7 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     [self.curPlayerItem removeObserver:self forKeyPath:@"status"];
 }
 
+// 远程控制处理
 - (void)remoteControlEventHandler
 {
     // 直接使用sharedCommandCenter来获取MPRemoteCommandCenter的shared实例
@@ -270,6 +275,8 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     }];
 }
 
+
+// 配置播放信息
 -(void)configNowPlayingInfoCenter {
     Class playingInfoCenter = NSClassFromString(@"MPNowPlayingInfoCenter");
     

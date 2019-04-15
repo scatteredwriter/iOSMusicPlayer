@@ -8,10 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import "MusicItem.h"
+#import "CurMusicViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MusicControlBar : UIView
+@protocol MusicControlBarDelegate <NSObject>
+
+- (void)presentViewController:(UIViewController *)controller;
+- (void)presentViewControllerDismissed:(BOOL)dismissed;
+
+@end
+
+@interface MusicControlBar : UIView <CurMusicViewControllerDelegate>
+@property (nonatomic, weak) id<MusicControlBarDelegate> delegate;
 @property (nonatomic, strong) MusicItem *curMusic;
 @end
 

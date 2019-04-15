@@ -14,7 +14,7 @@
 @interface BaseMusicCell ()
 @property (nonatomic, strong) UILabel *songNameLabel;
 @property (nonatomic, strong) UILabel *descLabel;
-@property (nonatomic, strong) UIButton *addButton;
+@property (nonatomic, strong) UIButton *downloadButton;
 @property (nonatomic, strong) UIImageView *albumImgView;
 @end
 
@@ -32,14 +32,14 @@
         self.descLabel.textColor = [UIColor colorWithHexString:Second_Color];
         [self addSubview:self.descLabel];
         
-        self.addButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        self.addButton.tintColor = [UIColor colorWithHexString:APP_Color];
-        [self.addButton setImage:[UIImage imageNamed:@"plus"] forState:UIControlStateDisabled];
-        [self.addButton setImage:[UIImage imageNamed:@"plus"] forState:UIControlStateNormal];
-        [self.addButton setImage:[UIImage imageNamed:@"plus"] forState:UIControlStateHighlighted];
-        self.addButton.contentEdgeInsets = UIEdgeInsetsZero;
-        self.addButton.enabled = NO;
-        [self addSubview:self.addButton];
+        self.downloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        self.downloadButton.tintColor = [UIColor colorWithHexString:APP_Color];
+        [self.downloadButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateDisabled];
+        [self.downloadButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+        [self.downloadButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateHighlighted];
+        self.downloadButton.contentEdgeInsets = UIEdgeInsetsZero;
+        self.downloadButton.enabled = NO;
+        [self addSubview:self.downloadButton];
         
         self.albumImgView = [[UIImageView alloc] init];
         [self addSubview:self.albumImgView];
@@ -71,7 +71,7 @@
     if (_music.albumName && _music.singerName) {
         self.descLabel.text = [NSString stringWithFormat:@"%@ - %@", _music.singerName, _music.albumName];
     }
-    self.songNameLabel.enabled = self.descLabel.enabled = self.addButton.enabled = !_music.payPlay;
+    self.songNameLabel.enabled = self.descLabel.enabled = self.downloadButton.enabled = !_music.payPlay;
     [self setNeedsLayout];
 }
 
@@ -92,7 +92,7 @@
     [self.descLabel sizeToFit];
     self.descLabel.frame = CGRectMake(CGRectGetMaxX(self.albumImgView.frame) + 10, CGRectGetMaxY(self.albumImgView.frame) - 13, self.labelWidth, CGRectGetHeight(self.descLabel.frame));
     
-    self.addButton.frame = CGRectMake(CGRectGetWidth(self.frame) - self.rightMargin - self.addButtonHeightAndWidth, (self.cellHeight  - self.addButtonHeightAndWidth) / 2, self.addButtonHeightAndWidth, self.addButtonHeightAndWidth);
+    self.downloadButton.frame = CGRectMake(CGRectGetWidth(self.frame) - self.rightMargin - self.addButtonHeightAndWidth, (self.cellHeight  - self.addButtonHeightAndWidth) / 2, self.addButtonHeightAndWidth, self.addButtonHeightAndWidth);
 }
 
 @end

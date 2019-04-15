@@ -10,7 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const RCPlayerPlayMusicNotification;
-extern NSString * const RCPlayerPauseMusicNotification;
+extern NSString * const RCPlayerUpdateCurrentMusicNotification;
+extern NSString * const RCPlayerPlayOrPauseMusicNotification;
+extern NSString * const RCPlayerPlayOrPauseUINotification;
 
 NS_ASSUME_NONNULL_END

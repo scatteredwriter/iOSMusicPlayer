@@ -8,5 +8,6 @@
 
 #import "NotificationName.h"
 
-NSString * const RCPlayerPlayMusicNotification = @"RCPlayerPlayMusic";
-NSString * const RCPlayerPauseMusicNotification = @"RCPlayerPauseMusic";
+NSString * const RCPlayerUpdateCurrentMusicNotification = @"RCPlayerUpdateCurrentMusicNotification";
+NSString * const RCPlayerPlayOrPauseMusicNotification = @"RCPlayerPlayOrPauseMusicNotification";
+NSString * const RCPlayerPlayOrPauseUINotification = @"RCPlayerPlayOrPauseUINotification";

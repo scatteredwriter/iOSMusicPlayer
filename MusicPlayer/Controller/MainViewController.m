@@ -33,6 +33,7 @@
     [self.view addSubview:self.mainWindow];
     
     self.musicControlBar = [[MusicControlBar alloc] init];
+    self.musicControlBar.delegate = self;
     [self.view addSubview:self.musicControlBar];
 }
 
@@ -47,6 +48,18 @@
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
+}
+
+- (void)presentViewController:(UIViewController *)controller {
+    [self presentViewController:controller animated:YES completion:^{
+        self.mainWindow.hidden = YES;
+        self.musicControlBar.hidden = YES;
+    }];
+}
+
+- (void)presentViewControllerDismissed:(BOOL)dismissed {
+    self.mainWindow.hidden = NO;
+    self.musicControlBar.hidden = NO;
 }
 
 @end

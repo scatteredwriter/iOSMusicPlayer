@@ -11,6 +11,8 @@
 #import "MusicItem.h"
 #import "Color.h"
 #import "NotificationName.h"
+#import "MainViewController.h"
+#import "CurMusicViewController.h"
 #import <SDWebImage/SDWebImage.h>
 
 #define MUSIC_CONTROL_BAR_HEIGHT 70
@@ -33,12 +35,13 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         
-        _effectView = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+        _effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
         _whiteView = [[UIView alloc] init];
         _whiteView.backgroundColor = [UIColor colorWithHexString:APP_Color];
         [self addSubview:_whiteView];
         [self addSubview:_effectView];
         
+        self.userInteractionEnabled = YES;
         self.isPause = YES;
         
         self.songNameLabel = [[UILabel alloc] init];
@@ -73,8 +76,14 @@
         [self.albumImgView setImage:[UIImage imageNamed:@"cd"]];
         [self addSubview:self.albumImgView];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCurMusic:) name:RCPlayerPlayMusicNotification object:nil];
-        
+        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewGesture:)];
+        [tapGesture setNumberOfTapsRequired:1];
+        [self addGestureRecognizer:tapGesture];
+
+        // 监听播放歌曲更新
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCurMusic:) name:RCPlayerUpdateCurrentMusicNotification object:nil];
+        // 监听音乐播放或暂停
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePlayState:) name:RCPlayerPlayOrPauseUINotification object:nil];
     }
     return self;
 }
@@ -90,7 +99,7 @@
     CGFloat buttonHeightAndWidth = 40;
     CGFloat leftMargin = 20;
     CGFloat rightMargin = 10;
-    CGFloat labelWidth = 320;
+    CGFloat labelWidth = 200;
     
     _effectView.frame = self.bounds;
     _whiteView.frame = CGRectMake(15, 25, CGRectGetWidth(self.frame) - 15 * 2, CGRectGetHeight(self.frame) - 25 * 2);
@@ -109,33 +118,65 @@
     self.playButton.frame = CGRectMake(CGRectGetMinX(self.playListButton.frame) - buttonHeightAndWidth - 20, (MUSIC_CONTROL_BAR_HEIGHT - buttonHeightAndWidth) / 2, buttonHeightAndWidth, buttonHeightAndWidth);
 }
 
+- (void)viewGesture:(UITapGestureRecognizer *)gesture {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(presentViewController:)]) {
+        CurMusicViewController *controller = [[CurMusicViewController alloc] init];
+        controller.delegate = self;
+        [self.delegate presentViewController:controller];
+    }
+}
+
+- (void)curViewControllerDismissed:(BOOL)dismissed {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(presentViewControllerDismissed:)]) {
+        [self.delegate presentViewControllerDismissed:dismissed];
+    }
+}
+
 - (void)updateCurMusic:(NSNotification *)notification {
     MusicItem *newMusic = notification.userInfo[@"music"];
     if (!newMusic)
         return;
     
-    self.isPause = NO;
-    [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumImgUrl] placeholderImage:nil];
-    self.songNameLabel.text = newMusic.songName;
-    self.descLabel.text = [NSString stringWithFormat:@"%@ - %@", newMusic.singerName, newMusic.albumName];
-    [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
-    [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateHighlighted];
+    self.curMusic = newMusic;
+    [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:self.curMusic.albumImgUrl] placeholderImage:nil];
+    self.songNameLabel.text = self.curMusic.songName;
+    self.descLabel.text = [NSString stringWithFormat:@"%@ - %@", self.curMusic.singerName, self.curMusic.albumName];
+    [self p_updatePlayState];
     self.playButton.enabled = YES;
     [self setNeedsLayout];
 }
 
-- (void)playButtonClickHandler {
-    if (self.isPause) {
-        [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
-        [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateHighlighted];
-        self.isPause = NO;
+- (void)updatePlayState:(NSNotification *)notification {
+    BOOL isPause = [notification.userInfo[@"isPause"] boolValue];
+    if (isPause) {
+        [self p_updatePauseState];
     }
     else {
-        [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-        [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateHighlighted];
-        self.isPause = YES;
+        [self p_updatePlayState];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerPauseMusicNotification object:nil userInfo:@{@"isPause":[NSNumber numberWithBool:self.isPause]}];
+    return;
+}
+
+- (void)p_updatePlayState {
+    [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+    [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateHighlighted];
+    self.isPause = NO;
+}
+
+- (void)p_updatePauseState {
+    [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateHighlighted];
+    self.isPause = YES;
+}
+
+- (void)playButtonClickHandler {
+    if (self.isPause) {
+        [self p_updatePlayState];
+    }
+    else {
+        [self p_updatePauseState];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerPlayOrPauseMusicNotification object:nil userInfo:nil];
 }
 
 @end
