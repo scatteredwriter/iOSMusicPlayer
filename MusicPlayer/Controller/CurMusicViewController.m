@@ -109,7 +109,7 @@
     [self.view addSubview:self.nextButton];
     
     self.albumImgView = [[UIImageView alloc] init];
-    [self.albumImgView setImage:[UIImage imageNamed:@"cd"]];
+    [self.albumImgView setImage:[UIImage imageNamed:@"player_cd"]];
     [self.view addSubview:self.albumImgView];
     
     // 监听播放歌曲更新
@@ -133,7 +133,7 @@
     }
     if (_player.curMusic) {
         [_bgImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumImgUrl]];
-        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"cd"]];
+        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
         self.songNameLabel.text = _player.curMusic.songName;
         self.singerLabel.text = _player.curMusic.singerName;
         self.albumNameLabel.text = _player.curMusic.albumName;
@@ -151,7 +151,7 @@
     _effectView.frame = self.view.bounds;
     _bgImgView.frame = self.view.bounds;
     
-    self.backButton.frame = CGRectMake(20, 25, 40, 40);
+    self.backButton.frame = CGRectMake(15, 25, 40, 40);
     
     CGFloat labelMaxWidth = CGRectGetWidth(self.view.frame) - (CGRectGetMaxX(self.backButton.frame) + 20) * 2;
     [self.songNameLabel sizeToFit];
@@ -172,8 +172,8 @@
     CGFloat albumNameLabelWidth = CGRectGetWidth(self.albumNameLabel.frame) > labelMaxWidth ? labelMaxWidth : CGRectGetWidth(self.albumNameLabel.frame);
     self.albumNameLabel.frame = CGRectMake(albumNameLabelX, CGRectGetMaxY(self.albumImgView.frame) + 15, albumNameLabelWidth, CGRectGetHeight(self.albumNameLabel.frame));
     
-    CGSize playButtonSize = CGSizeMake(55, 55);
-    self.playButton.frame = CGRectMake((CGRectGetWidth(self.view.frame) - playButtonSize.width) / 2, CGRectGetMaxY(self.view.frame) - 50 - playButtonSize.height, playButtonSize.width, playButtonSize.height);
+    CGSize playButtonSize = CGSizeMake(40, 40);
+    self.playButton.frame = CGRectMake((CGRectGetWidth(self.view.frame) - playButtonSize.width) / 2, CGRectGetMaxY(self.view.frame) - 20 - playButtonSize.height, playButtonSize.width, playButtonSize.height);
     
     CGSize buttonSize = CGSizeMake(25, 25);
     self.playListButton.frame = CGRectMake(CGRectGetWidth(self.view.frame) - buttonSize.width - 30, CGRectGetMidY(self.playButton.frame) - buttonSize.height / 2, buttonSize.width, buttonSize.height);

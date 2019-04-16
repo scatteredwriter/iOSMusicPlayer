@@ -138,7 +138,7 @@
         return;
     
     self.curMusic = newMusic;
-    [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:self.curMusic.albumImgUrl] placeholderImage:nil];
+    [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:self.curMusic.albumImgUrl] placeholderImage:[UIImage imageNamed:@"cd"]];
     self.songNameLabel.text = self.curMusic.songName;
     self.descLabel.text = [NSString stringWithFormat:@"%@ - %@", self.curMusic.singerName, self.curMusic.albumName];
     [self p_updatePlayState];

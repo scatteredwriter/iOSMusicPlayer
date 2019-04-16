@@ -63,7 +63,7 @@
     if (!_music)
         return;
     if (_music.albumImgUrl) {
-        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:_music.albumImgUrl] placeholderImage:nil];
+        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:_music.albumImgUrl] placeholderImage:[UIImage imageNamed:@"cd"]];
     }
     if (_music.songName) {
         self.songNameLabel.text = _music.songName;
