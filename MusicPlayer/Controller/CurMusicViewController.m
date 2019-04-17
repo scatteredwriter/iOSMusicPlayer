@@ -11,6 +11,7 @@
 #import "Color.h"
 #import "RCPlayer.h"
 #import "NotificationName.h"
+#import "PlayProgressSlider.h"
 #import <SDWebImage/SDWebImage.h>
 
 @interface CurMusicViewController ()
@@ -24,6 +25,7 @@
 @property (nonatomic, strong) UIButton *downloadButton;
 @property (nonatomic, strong) UIButton *previousButton;
 @property (nonatomic, strong) UIButton *nextButton;
+@property (nonatomic, strong) PlayProgressSlider *progressSlider;
 @property (nonatomic, assign) BOOL isPause;
 @end
 
@@ -37,6 +39,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [[RCPlayer sharedPlayer] addDelegate:self];
+    
     self.view.backgroundColor = [UIColor blackColor];
     
     _bgImgView = [[UIImageView alloc] init];
@@ -112,10 +116,9 @@
     [self.albumImgView setImage:[UIImage imageNamed:@"player_cd"]];
     [self.view addSubview:self.albumImgView];
     
-    // 监听播放歌曲更新
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCurMusic:) name:RCPlayerUpdateCurrentMusicNotification object:nil];
-    // 监听音乐播放或暂停
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePlayState:) name:RCPlayerPlayOrPauseUINotification object:nil];
+    self.progressSlider = [[PlayProgressSlider alloc] init];
+    self.progressSlider.delegate = self;
+    [self.view addSubview:self.progressSlider];
     
     [self p_initPlayState];
 }
@@ -131,13 +134,15 @@
         [self.playButton setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateNormal];
         [self.playButton setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateHighlighted];
     }
-    if (_player.curMusic) {
+    if (_player.curMusic && _player.curPlayerItem) {
         [_bgImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumImgUrl]];
         [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
         self.songNameLabel.text = _player.curMusic.songName;
         self.singerLabel.text = _player.curMusic.singerName;
         self.albumNameLabel.text = _player.curMusic.albumName;
         self.playButton.enabled = YES;
+        [self.progressSlider setCurProgress:_player.curPlayerItem.currentTime];
+        [self.progressSlider setMaxProgress:_player.curPlayerItem.duration];
     }
 }
 
@@ -185,59 +190,84 @@
     CGFloat nextButtonX = CGRectGetMaxX(self.playButton.frame) + (CGRectGetMinX(self.playListButton.frame) - CGRectGetMaxX(self.playButton.frame) - buttonSize.width) / 2;
     self.nextButton.frame = CGRectMake(nextButtonX, CGRectGetMidY(self.playButton.frame) - buttonSize.height / 2, buttonSize.width, buttonSize.height);
     
-    [self setNeedsStatusBarAppearanceUpdate];
-}
-
-- (void)updateCurMusic:(NSNotification *)notification {
-    MusicItem *newMusic = notification.userInfo[@"music"];
-    if (!newMusic)
-        return;
+    self.progressSlider.frame = CGRectMake(15, CGRectGetMinY(self.playButton.frame) - 50, CGRectGetWidth(self.view.frame) - 15 * 2, 20);
     
-    [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:nil];
-    self.songNameLabel.text = newMusic.songName;
-    self.singerLabel.text = newMusic.singerName;
-    self.albumNameLabel.text = newMusic.albumName;
-    [self p_updatePlayState];
-    self.playButton.enabled = YES;
-}
-
-- (void)updatePlayState:(NSNotification *)notification {
-    BOOL isPause = [notification.userInfo[@"isPause"] boolValue];
-    if (isPause) {
-        [self p_updatePauseState];
-    }
-    else {
-        [self p_updatePlayState];
-    }
-    return;
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)p_updatePlayState {
     [self.playButton setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateNormal];
     [self.playButton setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateHighlighted];
+    self.playButton.enabled = YES;
     self.isPause = NO;
 }
 
 - (void)p_updatePauseState {
     [self.playButton setImage:[UIImage imageNamed:@"player_play"] forState:UIControlStateNormal];
     [self.playButton setImage:[UIImage imageNamed:@"player_play"] forState:UIControlStateHighlighted];
+    self.playButton.enabled = YES;
     self.isPause = YES;
 }
 
 - (void)playButtonClickHandler {
-    if (self.isPause) {
-        [self p_updatePlayState];
-    }
-    else {
-        [self p_updatePauseState];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerPlayOrPauseMusicNotification object:nil userInfo:nil];
+    [[RCPlayer sharedPlayer] playOrPause];
 }
 
 - (void)backButtonClickHandler {
     [self dismissViewControllerAnimated:YES completion:nil];
     if (self.delegate && [self.delegate respondsToSelector:@selector(curViewControllerDismissed:)]) {
         [self.delegate curViewControllerDismissed:YES];
+    }
+}
+
+#pragma mark - RCPlayer delegate
+
+- (void)RCPlayer:(id)player UpdateProgress:(CMTime)progress {
+    Float64 current = CMTimeGetSeconds(progress);
+    Float64 duration = CMTimeGetSeconds([RCPlayer sharedPlayer].curPlayerItem.duration);
+    if (CMTIME_IS_VALID(progress) && current && duration) {
+        [self.progressSlider setCurProgress:progress];
+        [self.progressSlider updateCurProgress:(current / duration)];
+    }
+}
+
+- (void)RCPlayer:(id)player UpdateMusic:(MusicItem *)newMusic {
+    if (newMusic) {
+        [self.progressSlider setCurProgress:CMTimeMake(0.0, 1.0)];
+        [self.progressSlider setMaxProgress:CMTimeMake(0.0, 1.0)];
+        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:nil];
+        self.songNameLabel.text = newMusic.songName;
+        self.singerLabel.text = newMusic.singerName;
+        self.albumNameLabel.text = newMusic.albumName;
+        [self p_updatePlayState];
+        self.playButton.enabled = YES;
+    }
+}
+
+- (void)RCPlayer:(id)player PlayPause:(BOOL)isPause {
+    if (isPause) {
+        [self p_updatePauseState];
+    }
+    else {
+        [self p_updatePlayState];
+    }
+}
+
+- (void)RCPlayerPlayFinished:(id)player {
+    [self p_updatePauseState];
+    self.playButton.enabled = NO;
+}
+
+#pragma mark - PlayProgressSlider delegate
+
+- (void)playProgressSlider:(UIView *)playProgressSlider updateValue:(float)value {
+    if (value > 0.0 && [RCPlayer sharedPlayer].curPlayerItem) {
+        if ([RCPlayer sharedPlayer].status == RCPlayerStatusFinished) {
+            [self.progressSlider setCurProgress:self.progressSlider.maxProgress];
+            [self.progressSlider updateCurProgress:1.0];
+            return;
+        }
+        [[RCPlayer sharedPlayer] seekToTime:CMTimeMultiplyByFloat64([RCPlayer sharedPlayer].curPlayerItem.duration, value)];
     }
 }
 

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MusicItem.h"
 #import "CurMusicViewController.h"
+#import "RCPlayer.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface MusicControlBar : UIView <CurMusicViewControllerDelegate>
+@interface MusicControlBar : UIView <CurMusicViewControllerDelegate, RCPlayerDelegate>
 @property (nonatomic, weak) id<MusicControlBarDelegate> delegate;
 @property (nonatomic, strong) MusicItem *curMusic;
 @end

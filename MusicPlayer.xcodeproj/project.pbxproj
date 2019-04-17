@@ -16,6 +16,7 @@
 		C24F53EF226226A200A843F4 /* RCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F53EE226226A200A843F4 /* RCPlayer.m */; };
 		C24F53FC22622B9000A843F4 /* NotificationName.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F53FB22622B9000A843F4 /* NotificationName.m */; };
 		C256D50C225DDFCB00E5842F /* RankingDetailTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = C256D50B225DDFCB00E5842F /* RankingDetailTableController.m */; };
+		C277A88B226618C700098C83 /* PlayProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = C277A88A226618C700098C83 /* PlayProgressSlider.m */; };
 		C27E8BB0225C9181005BA51A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C27E8BAF225C9181005BA51A /* AppDelegate.m */; };
 		C27E8BB8225C9182005BA51A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C27E8BB7225C9182005BA51A /* Assets.xcassets */; };
 		C27E8BBB225C9182005BA51A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C27E8BB9225C9182005BA51A /* LaunchScreen.storyboard */; };
@@ -141,6 +142,8 @@
 		C24F53FB22622B9000A843F4 /* NotificationName.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationName.m; sourceTree = "<group>"; };
 		C256D50A225DDFCB00E5842F /* RankingDetailTableController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RankingDetailTableController.h; sourceTree = "<group>"; };
 		C256D50B225DDFCB00E5842F /* RankingDetailTableController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RankingDetailTableController.m; sourceTree = "<group>"; };
+		C277A889226618C700098C83 /* PlayProgressSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayProgressSlider.h; sourceTree = "<group>"; };
+		C277A88A226618C700098C83 /* PlayProgressSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayProgressSlider.m; sourceTree = "<group>"; };
 		C27E8BAB225C9181005BA51A /* MusicPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C27E8BAE225C9181005BA51A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C27E8BAF225C9181005BA51A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -203,6 +206,8 @@
 				C2ACDACA225E2822001C8A8C /* BaseMusicCell.m */,
 				C2076584225F4CA900C37D33 /* RankingMusicCell.h */,
 				C2076585225F4CA900C37D33 /* RankingMusicCell.m */,
+				C277A889226618C700098C83 /* PlayProgressSlider.h */,
+				C277A88A226618C700098C83 /* PlayProgressSlider.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -498,6 +503,7 @@
 				C27E8BF5225CA6BA005BA51A /* RankingTableController.m in Sources */,
 				C2076593225F8CD300C37D33 /* Color.m in Sources */,
 				C27E8BB0225C9181005BA51A /* AppDelegate.m in Sources */,
+				C277A88B226618C700098C83 /* PlayProgressSlider.m in Sources */,
 				C27E8BF2225CA1E2005BA51A /* MainTabBarController.m in Sources */,
 				C24F53FC22622B9000A843F4 /* NotificationName.m in Sources */,
 			);

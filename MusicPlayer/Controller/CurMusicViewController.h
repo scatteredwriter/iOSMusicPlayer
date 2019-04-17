@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "MusicItem.h"
+#import "RCPlayer.h"
+#import "PlayProgressSlider.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface CurMusicViewController : UIViewController
+@interface CurMusicViewController : UIViewController <RCPlayerDelegate, PlayProgressSliderDelegate>
 @property (nonatomic, weak) id<CurMusicViewControllerDelegate> delegate;
 @end
 

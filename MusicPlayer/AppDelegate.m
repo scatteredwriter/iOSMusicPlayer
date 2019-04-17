@@ -21,9 +21,6 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    //允许应用程序接收远程控制
-    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [[MainViewController alloc] init];
     self.window.backgroundColor = [UIColor whiteColor];
@@ -46,8 +43,6 @@
     AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setCategory:AVAudioSessionCategoryPlayback error:nil];
     [session setActive:YES error:nil];
-    //允许应用程序接收远程控制
-    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     //设置后台任务ID
     UIBackgroundTaskIdentifier newTaskId = UIBackgroundTaskInvalid;
     newTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];

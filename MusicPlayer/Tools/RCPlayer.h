@@ -12,19 +12,34 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol RCPlayerDelegate <NSObject>
+
+@optional
+- (void)RCPlayer:(id)player UpdateProgress:(CMTime)progress;
+- (void)RCPlayer:(id)player UpdateMusic:(MusicItem *)newMusic;
+- (void)RCPlayer:(id)player PlayPause:(BOOL)isPause;
+- (void)RCPlayerPlayFinished:(id)player;
+
+@end
+
 typedef enum RCPlayerStatus : NSInteger {
     RCPlayerStatusUnknown = 0,
     RCPlayerStatusReadyToPlay = 1,
-    RCPlayerStatusFailed = 2
+    RCPlayerStatusFailed = 2,
+    RCPlayerStatusFinished = 3
 } RCPlayerStatus;
 
-@interface RCPlayer : NSObject
-@property (nonatomic, strong) AVPlayerItem *curPlayerItem;
-@property (nonatomic, strong) MusicItem *curMusic;
+@interface RCPlayer : NSObject <RCPlayerDelegate>
+@property (nullable, nonatomic, strong) AVPlayerItem *curPlayerItem;
+@property (nullable, nonatomic, strong) MusicItem *curMusic;
 @property (nonatomic, readonly) RCPlayerStatus status;
+@property (nonatomic, strong) NSHashTable *delegates;
 @property (nonatomic, assign) BOOL isPause;
 + (RCPlayer *)sharedPlayer;
 - (void)playMusic:(MusicItem *)music;
+- (void)addDelegate:(id<RCPlayerDelegate>)delegate;
+- (void)playOrPause;
+- (void)seekToTime:(CMTime)time;
 @end
 
 NS_ASSUME_NONNULL_END

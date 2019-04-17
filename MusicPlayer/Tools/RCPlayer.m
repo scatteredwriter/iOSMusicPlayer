@@ -21,7 +21,7 @@ static id _periodicTimeObserver;
 static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 
 @interface RCPlayer ()
-@property (nonatomic, assign) Float64 curPosition;
+
 @end
 
 @implementation RCPlayer
@@ -31,24 +31,20 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
         if (!_player) {
             _player = [[AVPlayer alloc] init];
             _isPause = YES;
-            self.curPosition = 0.0;
-            
-            // 监听播放完成
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playFinished:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-            
-            // 监听音乐播放或暂停
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseCurMusic:) name:RCPlayerPlayOrPauseMusicNotification object:nil];
+            self.delegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
             
             if(!_periodicTimeObserver) {
                 // 监听播放进度，(1.0/1.0)秒监听一次
                 __weak RCPlayer *weakSelf = self;
                 _periodicTimeObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
                     Float64 current = CMTimeGetSeconds(time);
-                    Float64 total = CMTimeGetSeconds(self.curPlayerItem.duration);
-                    if (current) {
-                        weakSelf.curPosition = current;
-//                        weakSelf.playTime = [NSString stringWithFormat:@"%.f",current];
-//                        weakSelf.playDuration = [NSString stringWithFormat:@"%.2f",total];
+                    Float64 duration = CMTimeGetSeconds(self.curPlayerItem.duration);
+                    if (weakSelf.delegates.count && CMTIME_IS_VALID(time) && current && duration) {
+                        for (__weak id<RCPlayerDelegate> delegate in weakSelf.delegates) {
+                            if(delegate && [delegate respondsToSelector:@selector(RCPlayer:UpdateProgress:)]) {
+                                [delegate RCPlayer:self UpdateProgress:time];
+                            }
+                        }
                     }
                 }];
             }
@@ -77,7 +73,6 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_enter(group);
     [self setMusicUrl:music andDispatchGroup:group];
-//    __weak RCPlayer *w_self = self;
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         if (music.musicUrl) {
             NSLog(@"[RCPlayer playMusic:]: get musicUrl.");
@@ -85,6 +80,36 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
             [self createNewPlayerItem:[NSURL URLWithString:music.musicUrl]];
         }
     });
+}
+
+- (void)playOrPause {
+    NSLog(@"[RCPlayer pauseCurMusic:]: get message.");
+    if (self.curPlayerItem && self.curPlayerItem.status == AVPlayerItemStatusReadyToPlay) {
+        if (_isPause) {
+            NSLog(@"[RCPlayer pauseCurMusic:]: PLAY.");
+            [self p_play];
+        }
+        else {
+            NSLog(@"[RCPlayer pauseCurMusic:]: PAUSE.");
+            [self p_pause];
+        }
+    }
+    [self configNowPlayingInfoCenter];
+}
+
+- (void)addDelegate:(id<RCPlayerDelegate>)delegate {
+    if(delegate)
+        [self.delegates addObject:delegate];
+}
+
+- (void)seekToTime:(CMTime)time {
+    if (!CMTIME_IS_VALID(time) || CMTimeGetSeconds(time) < 0)
+        return;
+    if (!self.curMusic || !self.curPlayerItem)
+        return;
+    if (CMTimeGetSeconds(self.curPlayerItem.duration) < CMTimeGetSeconds(time))
+        return;
+    [_player seekToTime:time];
 }
 
 - (void)createNewPlayerItem:(NSURL *)musicUrl {
@@ -97,26 +122,6 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
                     options:options
                     context:nil];
     [_player replaceCurrentItemWithPlayerItem:self.curPlayerItem];
-}
-
-- (void)pauseCurMusic:(NSNotification *)notification {
-//    if (!notification.userInfo)
-//        return;
-    NSLog(@"[RCPlayer pauseCurMusic:]: get message.");
-    if (self.curPlayerItem && self.curPlayerItem.status == AVPlayerItemStatusReadyToPlay) {
-//        BOOL isPuase = [notification.userInfo[@"isPause"] boolValue];
-        if (_isPause) {
-            NSLog(@"[RCPlayer pauseCurMusic:]: PLAY.");
-            [_player play];
-            self.isPause = NO;
-        }
-        else {
-            NSLog(@"[RCPlayer pauseCurMusic:]: PAUSE.");
-            [_player pause];
-            self.isPause = YES;
-        }
-    } 
-    [self configNowPlayingInfoCenter];
 }
 
 - (void)setMusicUrl:(MusicItem *)music andDispatchGroup:(dispatch_group_t)group {
@@ -171,16 +176,61 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     }
 }
 
+- (void)p_readyToPlay {
+    NSLog(@"[RCPlayer]: RCPlayerStatusReadyToPlay.");
+    _status = RCPlayerStatusReadyToPlay;
+    // 开始处理远程控制
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    [self p_play];
+    // 发送播放通知
+    if (self.delegates.count > 0) {
+        for (__weak id<RCPlayerDelegate> delegate in self.delegates) {
+            if (delegate && [delegate respondsToSelector:@selector(RCPlayer:UpdateMusic:)]) {
+                [delegate RCPlayer:self UpdateMusic:self.curMusic];
+            }
+        }
+    }
+    // 监听播放完成
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playFinished:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    // 处理远程控制
+    [self remoteControlEventHandler];
+    [self configNowPlayingInfoCenter];
+}
+
 - (void)p_play {
     [_player play];
     self.isPause = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerPlayOrPauseUINotification object:nil userInfo:@{@"isPause":[NSNumber numberWithBool:self.isPause]}];
+    if (self.delegates.count > 0) {
+        for (__weak id<RCPlayerDelegate> delegate in self.delegates) {
+            if (delegate && [delegate respondsToSelector:@selector(RCPlayer:PlayPause:)]) {
+                [delegate RCPlayer:self PlayPause:self.isPause];
+            }
+        }
+    }
 }
 
 - (void)p_pause {
     [_player pause];
     self.isPause = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerPlayOrPauseUINotification object:nil userInfo:@{@"isPause":[NSNumber numberWithBool:self.isPause]}];
+    if (self.delegates.count > 0) {
+        for (__weak id<RCPlayerDelegate> delegate in self.delegates) {
+            if (delegate && [delegate respondsToSelector:@selector(RCPlayer:PlayPause:)]) {
+                [delegate RCPlayer:self PlayPause:self.isPause];
+            }
+        }
+    }
+}
+
+- (void)p_finished {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    if (self.delegates.count > 0) {
+        for (__weak id<RCPlayerDelegate> delegate in self.delegates) {
+            if (delegate && [delegate respondsToSelector:@selector(RCPlayerPlayFinished:)]) {
+                [delegate RCPlayerPlayFinished:self];
+            }
+        }
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -199,14 +249,7 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
         switch (status) {
             case AVPlayerItemStatusReadyToPlay:
                 // Ready to Play
-                _status = RCPlayerStatusReadyToPlay;
-                [self p_play];
-                //发送播放通知
-                [[NSNotificationCenter defaultCenter] postNotificationName:RCPlayerUpdateCurrentMusicNotification object:nil userInfo:@{@"music":self.curMusic}];
-                //处理远程控制
-                [self remoteControlEventHandler];
-                [self configNowPlayingInfoCenter];
-
+                [self p_readyToPlay];
                 break;
             case AVPlayerItemStatusFailed:
                 // Failed. Examine AVPlayerItem.error
@@ -223,7 +266,10 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 
 - (void)playFinished:(NSNotification *)notification {
     NSLog(@"[RCPlayer playFinished:]: PLAY FINISHED.");
-    [self.curPlayerItem removeObserver:self forKeyPath:@"status"];
+    if (self.curPlayerItem)
+        [self.curPlayerItem removeObserver:self forKeyPath:@"status"];
+    _status = RCPlayerStatusFinished;
+    [self p_finished];
 }
 
 // 远程控制处理
