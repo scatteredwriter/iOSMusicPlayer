@@ -143,6 +143,9 @@
         self.playButton.enabled = YES;
         [self.progressSlider setCurProgress:_player.curPlayerItem.currentTime];
         [self.progressSlider setMaxProgress:_player.curPlayerItem.duration];
+        if ([RCPlayer sharedPlayer].status == RCPlayerStatusFinished) {
+            [self.progressSlider updateCurProgress:1.0];
+        }
     }
 }
 
