@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 - (void)RCPlayer:(id)player UpdateProgress:(CMTime)progress;
-- (void)RCPlayer:(id)player UpdateMusic:(MusicItem *)newMusic;
+- (void)RCPlayer:(id)player UpdateMusic:(MusicItem *)newMusic Immediately:(BOOL)immediately;
 - (void)RCPlayer:(id)player PlayPause:(BOOL)isPause;
 - (void)RCPlayerPlayFinished:(id)player;
 
@@ -37,9 +37,11 @@ typedef enum RCPlayerStatus : NSInteger {
 @property (nonatomic, assign) BOOL isPause;
 + (RCPlayer *)sharedPlayer;
 - (void)playMusic:(MusicItem *)music;
+- (void)playMusic:(MusicItem *)music Immediately:(BOOL)immediately;
 - (void)addDelegate:(id<RCPlayerDelegate>)delegate;
 - (void)playOrPause;
 - (void)seekToTime:(CMTime)time;
+- (void)saveCurMusic;
 @end
 
 NS_ASSUME_NONNULL_END

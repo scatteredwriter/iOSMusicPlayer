@@ -16,6 +16,8 @@
 		C24F53EF226226A200A843F4 /* RCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F53EE226226A200A843F4 /* RCPlayer.m */; };
 		C24F53FC22622B9000A843F4 /* NotificationName.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F53FB22622B9000A843F4 /* NotificationName.m */; };
 		C256D50C225DDFCB00E5842F /* RankingDetailTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = C256D50B225DDFCB00E5842F /* RankingDetailTableController.m */; };
+		C271C8EE22686D2E00257880 /* CurMusicList.plist in Resources */ = {isa = PBXBuildFile; fileRef = C271C8ED22686D2E00257880 /* CurMusicList.plist */; };
+		C271C8FB22686EFC00257880 /* CurMusicDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = C271C8FA22686EFC00257880 /* CurMusicDAO.m */; };
 		C277A88B226618C700098C83 /* PlayProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = C277A88A226618C700098C83 /* PlayProgressSlider.m */; };
 		C27E8BB0225C9181005BA51A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C27E8BAF225C9181005BA51A /* AppDelegate.m */; };
 		C27E8BB8225C9182005BA51A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C27E8BB7225C9182005BA51A /* Assets.xcassets */; };
@@ -142,6 +144,10 @@
 		C24F53FB22622B9000A843F4 /* NotificationName.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationName.m; sourceTree = "<group>"; };
 		C256D50A225DDFCB00E5842F /* RankingDetailTableController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RankingDetailTableController.h; sourceTree = "<group>"; };
 		C256D50B225DDFCB00E5842F /* RankingDetailTableController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RankingDetailTableController.m; sourceTree = "<group>"; };
+		C271C8ED22686D2E00257880 /* CurMusicList.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CurMusicList.plist; sourceTree = "<group>"; };
+		C271C8F922686EFC00257880 /* CurMusicDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CurMusicDAO.h; sourceTree = "<group>"; };
+		C271C8FA22686EFC00257880 /* CurMusicDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CurMusicDAO.m; sourceTree = "<group>"; };
+		C271C8FC22688FEA00257880 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		C277A889226618C700098C83 /* PlayProgressSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayProgressSlider.h; sourceTree = "<group>"; };
 		C277A88A226618C700098C83 /* PlayProgressSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayProgressSlider.m; sourceTree = "<group>"; };
 		C27E8BAB225C9181005BA51A /* MusicPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -193,6 +199,7 @@
 				C2076592225F8CD300C37D33 /* Color.m */,
 				C24F53FA22622B9000A843F4 /* NotificationName.h */,
 				C24F53FB22622B9000A843F4 /* NotificationName.m */,
+				C271C8ED22686D2E00257880 /* CurMusicList.plist */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -252,6 +259,7 @@
 		C27E8BDC225C924C005BA51A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C271C8FC22688FEA00257880 /* libsqlite3.0.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -288,6 +296,8 @@
 				C2CB33E82260B2A700F77B1A /* NSString+Additional.m */,
 				C24F53ED226226A200A843F4 /* RCPlayer.h */,
 				C24F53EE226226A200A843F4 /* RCPlayer.m */,
+				C271C8F922686EFC00257880 /* CurMusicDAO.h */,
+				C271C8FA22686EFC00257880 /* CurMusicDAO.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -475,6 +485,7 @@
 			files = (
 				C27E8BBB225C9182005BA51A /* LaunchScreen.storyboard in Resources */,
 				C27E8BB8225C9182005BA51A /* Assets.xcassets in Resources */,
+				C271C8EE22686D2E00257880 /* CurMusicList.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +507,7 @@
 				C2ACDAC5225E02BD001C8A8C /* QQMusicAPI.m in Sources */,
 				C21DB81422647FE0009B4812 /* CurMusicViewController.m in Sources */,
 				C24F53EF226226A200A843F4 /* RCPlayer.m in Sources */,
+				C271C8FB22686EFC00257880 /* CurMusicDAO.m in Sources */,
 				C24E36A0225DC5B300B0F128 /* MainViewController.m in Sources */,
 				C27E8C00225CB557005BA51A /* UIColor+Additional.m in Sources */,
 				C2ACDACE225E2887001C8A8C /* MusicItem.m in Sources */,

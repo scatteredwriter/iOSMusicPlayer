@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CMTime curProgress;
 @property (nonatomic, assign) CMTime maxProgress;
 @property (nonatomic, weak) id<PlayProgressSliderDelegate> delegate;
-- (void)updateCurProgress:(float)progress;
+- (void)updateCurValue:(float)value;
 @end
 
 NS_ASSUME_NONNULL_END

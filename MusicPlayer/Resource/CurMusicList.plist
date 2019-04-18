@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>albumMid</key>
+	<string></string>
+	<key>mediaMid</key>
+	<string></string>
+	<key>songMid</key>
+	<string></string>
+	<key>albumLargeImgUrl</key>
+	<string></string>
+	<key>albumImgUrl</key>
+	<string></string>
+	<key>singerName</key>
+	<string></string>
+	<key>albumName</key>
+	<string></string>
+	<key>songName</key>
+	<string></string>
+</dict>
+</plist>

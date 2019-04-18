@@ -76,7 +76,7 @@
     self.playButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.playButton.tintColor = [UIColor whiteColor];
     self.playButton.contentEdgeInsets = UIEdgeInsetsZero;
-    self.playButton.enabled = NO;
+//    self.playButton.enabled = NO;
     [self.playButton addTarget:self action:@selector(playButtonClickHandler) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.playButton];
     
@@ -144,7 +144,7 @@
         [self.progressSlider setCurProgress:_player.curPlayerItem.currentTime];
         [self.progressSlider setMaxProgress:_player.curPlayerItem.duration];
         if ([RCPlayer sharedPlayer].status == RCPlayerStatusFinished) {
-            [self.progressSlider updateCurProgress:1.0];
+            [self.progressSlider updateCurValue:1.0];
         }
     }
 }
@@ -230,20 +230,22 @@
     Float64 duration = CMTimeGetSeconds([RCPlayer sharedPlayer].curPlayerItem.duration);
     if (CMTIME_IS_VALID(progress) && current && duration) {
         [self.progressSlider setCurProgress:progress];
-        [self.progressSlider updateCurProgress:(current / duration)];
+        [self.progressSlider updateCurValue:(current / duration)];
     }
 }
 
-- (void)RCPlayer:(id)player UpdateMusic:(MusicItem *)newMusic {
+- (void)RCPlayer:(id)player UpdateMusic:(nonnull MusicItem *)newMusic Immediately:(BOOL)immediately {
     if (newMusic) {
         [self.progressSlider setCurProgress:CMTimeMake(0.0, 1.0)];
-        [self.progressSlider setMaxProgress:CMTimeMake(0.0, 1.0)];
+        [self.progressSlider updateCurValue:0];
         [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:nil];
         self.songNameLabel.text = newMusic.songName;
         self.singerLabel.text = newMusic.singerName;
         self.albumNameLabel.text = newMusic.albumName;
-        [self p_updatePlayState];
         self.playButton.enabled = YES;
+        if (immediately) {
+            [self p_updatePlayState];
+        }
     }
 }
 
@@ -258,18 +260,13 @@
 
 - (void)RCPlayerPlayFinished:(id)player {
     [self p_updatePauseState];
-    self.playButton.enabled = NO;
+//    self.playButton.enabled = NO;
 }
 
 #pragma mark - PlayProgressSlider delegate
 
 - (void)playProgressSlider:(UIView *)playProgressSlider updateValue:(float)value {
     if (value > 0.0 && [RCPlayer sharedPlayer].curPlayerItem) {
-        if ([RCPlayer sharedPlayer].status == RCPlayerStatusFinished) {
-            [self.progressSlider setCurProgress:self.progressSlider.maxProgress];
-            [self.progressSlider updateCurProgress:1.0];
-            return;
-        }
         [[RCPlayer sharedPlayer] seekToTime:CMTimeMultiplyByFloat64([RCPlayer sharedPlayer].curPlayerItem.duration, value)];
     }
 }

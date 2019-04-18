@@ -91,10 +91,10 @@
     [self setNeedsLayout];
 }
 
-- (void)updateCurProgress:(float)progress {
-    if (progress > 1.0 || progress < 0.0 || self.isSlide)
+- (void)updateCurValue:(float)value {
+    if (value > 1.0 || value < 0.0 || self.isSlide)
         return;
-    self.slider.value = progress;
+    self.slider.value = value;
 }
 
 - (void)p_valueChanged {

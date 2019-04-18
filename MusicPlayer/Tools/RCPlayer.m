@@ -10,6 +10,7 @@
 #import "NotificationName.h"
 #import "QQMusicAPI.h"
 #import "RCHTTPSessionManager.h"
+#import "CurMusicDAO.h"
 #import <SDWebImage/SDWebImage.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
@@ -21,7 +22,7 @@ static id _periodicTimeObserver;
 static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 
 @interface RCPlayer ()
-
+@property (nonatomic, assign) BOOL playImmediately;
 @end
 
 @implementation RCPlayer
@@ -31,6 +32,8 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
         if (!_player) {
             _player = [[AVPlayer alloc] init];
             _isPause = YES;
+            _status = RCPlayerStatusUnknown;
+            self.playImmediately = YES;
             self.delegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
             
             if(!_periodicTimeObserver) {
@@ -49,6 +52,8 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
                 }];
             }
 
+            [self recoverCurMusic];
+            
         }
     }
     return self;
@@ -69,6 +74,17 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     return _sharedPlayer;
 }
 
+- (void)recoverCurMusic {
+    MusicItem *music = [[CurMusicDAO sharedInstance] getCurMusic];
+    if (music && music.mediaMid.length && music.songMid.length) {
+        [self playMusic:music Immediately:NO];
+        NSLog(@"[RCPlay recoverCurMusic]: RECOVER CURRENT MUSIC SUCCESSFULLY.");
+    }
+    else {
+        NSLog(@"[RCPlay recoverCurMusic]: CANNOT RECOVER CURRENT MUSIC!");
+    }
+}
+
 - (void)playMusic:(MusicItem *)music {
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_enter(group);
@@ -82,19 +98,25 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     });
 }
 
+- (void)playMusic:(MusicItem *)music Immediately:(BOOL)immediately {
+    self.playImmediately = immediately;
+    [self playMusic:music];
+}
+
 - (void)playOrPause {
-    NSLog(@"[RCPlayer pauseCurMusic:]: get message.");
+    NSLog(@"[RCPlayer playOrPause:]: get message.");
+    if (self.curMusic && self.curPlayerItem && self.status == RCPlayerStatusFinished) {
+        [self createNewPlayerItem:[NSURL URLWithString:self.curMusic.musicUrl]];
+    }
     if (self.curPlayerItem && self.curPlayerItem.status == AVPlayerItemStatusReadyToPlay) {
         if (_isPause) {
-            NSLog(@"[RCPlayer pauseCurMusic:]: PLAY.");
             [self p_play];
         }
         else {
-            NSLog(@"[RCPlayer pauseCurMusic:]: PAUSE.");
             [self p_pause];
         }
+        [self configNowPlayingInfoCenter];
     }
-    [self configNowPlayingInfoCenter];
 }
 
 - (void)addDelegate:(id<RCPlayerDelegate>)delegate {
@@ -109,7 +131,18 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
         return;
     if (CMTimeGetSeconds(self.curPlayerItem.duration) < CMTimeGetSeconds(time))
         return;
+    if (self.status == RCPlayerStatusFinished) {
+        // 恢复播放
+        [self createNewPlayerItem:[NSURL URLWithString:self.curMusic.musicUrl]];
+    }
     [_player seekToTime:time];
+}
+
+- (void)saveCurMusic {
+    if (self.curMusic && self.status == RCPlayerStatusReadyToPlay) {
+        [[CurMusicDAO sharedInstance] updateCurMusic:self.curMusic];
+        NSLog(@"[RCPlayer saveCurMusic]: CURRENT MUSIC HAVE BEEN SAVED.");
+    }
 }
 
 - (void)createNewPlayerItem:(NSURL *)musicUrl {
@@ -181,12 +214,14 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     _status = RCPlayerStatusReadyToPlay;
     // 开始处理远程控制
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-    [self p_play];
+    if (self.playImmediately) {
+        [self p_play];
+    }
     // 发送播放通知
     if (self.delegates.count > 0) {
         for (__weak id<RCPlayerDelegate> delegate in self.delegates) {
-            if (delegate && [delegate respondsToSelector:@selector(RCPlayer:UpdateMusic:)]) {
-                [delegate RCPlayer:self UpdateMusic:self.curMusic];
+            if (delegate && [delegate respondsToSelector:@selector(RCPlayer:UpdateMusic:Immediately:)]) {
+                [delegate RCPlayer:self UpdateMusic:self.curMusic Immediately:self.playImmediately];
             }
         }
     }
@@ -195,9 +230,11 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     // 处理远程控制
     [self remoteControlEventHandler];
     [self configNowPlayingInfoCenter];
+    self.playImmediately = YES;
 }
 
 - (void)p_play {
+    NSLog(@"[RCPlyer p_play]: PLAY.");
     [_player play];
     self.isPause = NO;
     if (self.delegates.count > 0) {
@@ -210,6 +247,7 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 }
 
 - (void)p_pause {
+    NSLog(@"[RCPlayer p_pause]: PAUSE.");
     [_player pause];
     self.isPause = YES;
     if (self.delegates.count > 0) {

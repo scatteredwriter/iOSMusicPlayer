@@ -64,7 +64,7 @@
         [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
         [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateHighlighted];
         self.playButton.contentEdgeInsets = UIEdgeInsetsZero;
-        self.playButton.enabled = NO;
+//        self.playButton.enabled = NO;
         [self.playButton addTarget:self action:@selector(playButtonClickHandler) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.playButton];
         
@@ -166,15 +166,17 @@
     }
 }
 
-- (void)RCPlayer:(id)player UpdateMusic:(MusicItem *)newMusic {
+- (void)RCPlayer:(id)player UpdateMusic:(nonnull MusicItem *)newMusic Immediately:(BOOL)immediately {
     if (newMusic) {
         self.progressView.progress = 0.0;
         self.curMusic = newMusic;
         [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:self.curMusic.albumImgUrl] placeholderImage:[UIImage imageNamed:@"cd"]];
         self.songNameLabel.text = self.curMusic.songName;
         self.descLabel.text = [NSString stringWithFormat:@"%@ - %@", self.curMusic.singerName, self.curMusic.albumName];
-        [self p_updatePlayState];
         self.playButton.enabled = YES;
+        if (immediately) {
+            [self p_updatePlayState];
+        }
         [self setNeedsLayout];
     }
 }
@@ -190,7 +192,7 @@
 
 - (void)RCPlayerPlayFinished:(id)player {
     [self p_updatePauseState];
-    self.playButton.enabled = NO;
+//    self.playButton.enabled = NO;
 }
 
 @end
