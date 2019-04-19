@@ -116,6 +116,7 @@
     if (_data.count < 20) //已经没有更多内容，令self.page = -1表示不需要下滑加载更多页
         self.page = -1;
     self.isLoading = NO;
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
 - (void)createMusics {

@@ -191,7 +191,7 @@
     self.emptyLabel.frame = CGRectMake((SCREEN_WIDTH - CGRectGetWidth(self.emptyLabel.frame)) / 2, (VIEW_HEIGHT - CGRectGetHeight(self.emptyLabel.frame)) / 2, CGRectGetWidth(self.emptyLabel.frame), CGRectGetHeight(self.emptyLabel.frame));
     self.whiteView.frame = self.bounds;
     self.effectView.frame = self.bounds;
-    self.bgView.frame = [UIApplication sharedApplication].keyWindow.bounds;
+    self.bgView.frame = [UIApplication sharedApplication].delegate.window.bounds;
 }
 
 - (void)p_initData {
@@ -211,9 +211,9 @@
     self.alpha = 0.0;
     self.bgView.alpha = 0.0;
     self.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, VIEW_HEIGHT);
-    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-    [keyWindow addSubview:self.bgView];
-    [keyWindow addSubview:self];
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    [window addSubview:self.bgView];
+    [window addSubview:self];
     [UIView animateWithDuration:0.5 animations:^{
         self.alpha = 1.0;
         self.bgView.alpha = 1.0;
