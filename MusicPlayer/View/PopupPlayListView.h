@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) void (^closeCompleteBlock)(void);
 - (void)popupView:(void (^)(void))completeBlock;
 - (void)closeView;
+- (void)reloadData;
 @end
 
 NS_ASSUME_NONNULL_END

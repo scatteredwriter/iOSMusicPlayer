@@ -25,7 +25,6 @@
 @property (nonatomic, strong) UIButton *playButton;
 @property (nonatomic, strong) UIButton *playListButton;
 @property (nonatomic, strong) UIProgressView *progressView;
-@property (nonatomic, assign) BOOL isPause;
 @end
 
 @implementation MusicControlBar
@@ -46,7 +45,6 @@
         [self addSubview:_effectView];
         
         self.userInteractionEnabled = YES;
-        self.isPause = YES;
         
         self.songNameLabel = [[UILabel alloc] init];
         self.songNameLabel.font = [UIFont systemFontOfSize:15];
@@ -143,14 +141,12 @@
     [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
     [self.playButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateHighlighted];
     self.playButton.enabled = YES;
-    self.isPause = NO;
 }
 
 - (void)p_updatePauseState {
     [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateHighlighted];
     self.playButton.enabled = YES;
-    self.isPause = YES;
 }
 
 - (void)playButtonClickHandler {
@@ -169,13 +165,13 @@
     Float64 current = CMTimeGetSeconds(progress);
     Float64 duration = CMTimeGetSeconds([RCPlayer sharedPlayer].curPlayerItem.duration);
     if (CMTIME_IS_VALID(progress) && current && duration) {
-        self.progressView.progress = current / duration;
+        [self.progressView setProgress:(current / duration) animated:YES];
     }
 }
 
 - (void)RCPlayer:(id)player UpdateMusic:(nonnull MusicItem *)newMusic Immediately:(BOOL)immediately {
     if (newMusic) {
-        self.progressView.progress = 0.0;
+        [self.progressView setProgress:0.0 animated:NO];
         self.curMusic = newMusic;
         [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:self.curMusic.albumImgUrl] placeholderImage:[UIImage imageNamed:@"cd"]];
         self.songNameLabel.text = self.curMusic.songName;
@@ -199,7 +195,10 @@
 
 - (void)RCPlayerPlayFinished:(id)player {
     [self p_updatePauseState];
-//    self.playButton.enabled = NO;
+    [self.progressView setProgress:0.0 animated:NO];
+    self.songNameLabel.text = @"";
+    self.descLabel.text = @"";
+    [self.albumImgView setImage:[UIImage imageNamed:@"cd"]];
 }
 
 @end

@@ -13,8 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PlayListDAO : NSObject
 @property (nonatomic, assign, readonly) BOOL hasProblem;
+@property (nonatomic, assign, readonly) long count;
 + (PlayListDAO *)sharedPlayListDAO;
 - (MusicItem *)getMusicBysongMid:(NSString *)songMid;
+- (MusicItem *)getNextMusicBysongMid:(NSString *)songMid;
+- (MusicItem *)getPreviousMusicBysongMid:(NSString *)songMid;
 - (NSArray *)getAllMusics;
 - (int)addMusic:(MusicItem *)music;
 - (int)removeMusicBysongMid:(NSString *)songMid;

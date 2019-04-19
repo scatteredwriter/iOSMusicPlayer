@@ -25,6 +25,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    [[RCPlayer sharedPlayer] addDelegate:self];
     [self useNavigationBarBlackTheme];
     
     MainTabBarController *mainTabBarController = [[MainTabBarController alloc] init];
@@ -75,6 +76,12 @@
     [self.playListView popupView:^{
         weakSelf.mainWindow.userInteractionEnabled = NO;
     }];
+}
+
+- (void)RCPlayer:(id)player UpdateMusic:(MusicItem *)newMusic Immediately:(BOOL)immediately {
+    if (newMusic) {
+        [self.playListView reloadData];
+    }
 }
 
 @end

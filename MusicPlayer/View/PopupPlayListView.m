@@ -19,12 +19,14 @@
 @interface PopupPlayListViewCell : UITableViewCell
 @property (nonatomic, copy) MusicItem *music;
 @property (nonatomic, strong) UIButton *removeButton;
+@property (nonatomic, assign) BOOL isPlaying;
 @property (nonatomic, strong) void (^removeButtonBlock)(NSString *songMid);
 @end
 
 @interface PopupPlayListViewCell ()
 @property (nonatomic, strong) UILabel *songNameLabel;
 @property (nonatomic, strong) UILabel *singerNameLabel;
+@property (nonatomic, strong) UIImageView *playingImgView;
 @property (nonatomic, strong) UIView *separatorView;
 @end
 
@@ -43,6 +45,12 @@
         self.singerNameLabel.textColor = [UIColor colorWithHexString:Gary_Color];
         self.singerNameLabel.font = [UIFont systemFontOfSize:15];
         [self addSubview:self.singerNameLabel];
+        
+        UIImage *playingImg = [UIImage imageNamed:@"playing"];
+        self.playingImgView = [[UIImageView alloc] initWithImage:[playingImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+        self.playingImgView.tintColor = [UIColor colorWithHexString:APP_Color];
+        self.playingImgView.hidden = YES;
+        [self addSubview:self.playingImgView];
         
         self.removeButton = [UIButton buttonWithType:UIButtonTypeSystem];
         self.removeButton.tintColor = [UIColor colorWithHexString:Gary_Color];
@@ -65,11 +73,12 @@
     CGFloat songNameLabelWidth = CGRectGetWidth(self.songNameLabel.frame) > maxsongNameLabelWidth ? maxsongNameLabelWidth : CGRectGetWidth(self.songNameLabel.frame);
     self.songNameLabel.frame = CGRectMake(15, (CGRectGetHeight(self.frame) - CGRectGetHeight(self.songNameLabel.frame)) / 2, songNameLabelWidth, CGRectGetHeight(self.songNameLabel.frame));
     
-    CGFloat maxsingerNameLabelWidth = 150;
+    CGFloat maxsingerNameLabelWidth = SCREEN_WIDTH - CGRectGetMaxX(self.songNameLabel.frame) - 10 - 5 - 25 - 35 - 5;
     [self.singerNameLabel sizeToFit];
     CGFloat singerNameLabelWidth = CGRectGetWidth(self.singerNameLabel.frame) > maxsingerNameLabelWidth ? maxsingerNameLabelWidth : CGRectGetWidth(self.singerNameLabel.frame);
     self.singerNameLabel.frame = CGRectMake(CGRectGetMaxX(self.songNameLabel.frame) + 10, (CGRectGetHeight(self.frame) - CGRectGetHeight(self.singerNameLabel.frame)) / 2, singerNameLabelWidth, CGRectGetHeight(self.singerNameLabel.frame));
     
+    self.playingImgView.frame = CGRectMake(CGRectGetMaxX(self.singerNameLabel.frame) + 5, (CGRectGetHeight(self.frame) - 25) / 2, 25, 25);
     self.removeButton.frame = CGRectMake(SCREEN_WIDTH - 35 - 5, CGRectGetMidY(self.singerNameLabel.frame) - 35 / 2, 35, 35);
     self.separatorView.frame = CGRectMake(15, CGRectGetHeight(self.frame) - 0.5, SCREEN_WIDTH - 15, 0.5);
 }
@@ -80,6 +89,16 @@
         self.songNameLabel.text = _music.songName;
         self.singerNameLabel.text = _music.singerName;
         [self setNeedsLayout];
+    }
+}
+
+- (void)setIsPlaying:(BOOL)isPlaying {
+    _isPlaying = isPlaying;
+    if (_isPlaying) {
+        self.playingImgView.hidden = NO;
+    }
+    else {
+        self.playingImgView.hidden = YES;
     }
 }
 
@@ -97,6 +116,7 @@
 @property (nonatomic, strong) UIView *separatorView;
 @property (nonatomic, strong) UITableView *contentTableView;
 @property (nonatomic, strong) UILabel *emptyLabel;
+@property (nonatomic, strong) UIView *whiteView;
 @property (nonatomic, strong) UIVisualEffectView *effectView;
 @property (nonatomic, strong) UIView *bgView;
 @property (nonatomic, copy) NSArray *musics;
@@ -115,7 +135,12 @@
         [tapGesture setNumberOfTapsRequired:1];
         [self.bgView addGestureRecognizer:tapGesture];
         
+        self.whiteView = [[UIView alloc] init];
+        self.whiteView.backgroundColor = [UIColor colorWithHexString:@"#BBBBBB" alpha:0.4];
+        [self addSubview:self.whiteView];
+        
         self.effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+        self.effectView.alpha = 0.9;
         [self addSubview:self.effectView];
         
         self.titleLabel = [[UILabel alloc] init];
@@ -164,6 +189,7 @@
     self.contentTableView.frame = CGRectMake(0, CGRectGetMaxY(self.separatorView.frame), SCREEN_WIDTH, VIEW_HEIGHT - CGRectGetMaxY(self.separatorView.frame));
     [self.emptyLabel sizeToFit];
     self.emptyLabel.frame = CGRectMake((SCREEN_WIDTH - CGRectGetWidth(self.emptyLabel.frame)) / 2, (VIEW_HEIGHT - CGRectGetHeight(self.emptyLabel.frame)) / 2, CGRectGetWidth(self.emptyLabel.frame), CGRectGetHeight(self.emptyLabel.frame));
+    self.whiteView.frame = self.bounds;
     self.effectView.frame = self.bounds;
     self.bgView.frame = [UIApplication sharedApplication].keyWindow.bounds;
 }
@@ -173,6 +199,7 @@
     if (!self.musics || !self.musics.count) {
         NSLog(@"[PopupPlayListView p_initData]: NO DATA!");
         self.emptyLabel.hidden = NO;
+        [self.contentTableView reloadData];
         return;
     }
     NSLog(@"[PopupPlayListView p_initData]: GET MUSICS.");
@@ -196,6 +223,7 @@
             completeBlock();
     }];
     [self p_initData];
+    [self p_scrollTableView];
 }
 
 - (void)closeView {
@@ -212,6 +240,23 @@
     }];
     if (self.closeCompleteBlock)
         self.closeCompleteBlock();
+}
+
+- (void)reloadData {
+    if (self.contentTableView) {
+        [self.contentTableView reloadData];
+    }
+}
+
+- (void)p_scrollTableView {
+    if (self.musics && self.contentTableView && [RCPlayer sharedPlayer].curMusic) {
+        for (int i = 0; i < self.musics.count; i++) {
+            if ([((MusicItem *)self.musics[i]).songMid isEqualToString:[RCPlayer sharedPlayer].curMusic.songMid]) {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                [self.contentTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            }
+        }
+    }
 }
 
 - (void)viewGesture:(UITapGestureRecognizer *)gesture {
@@ -240,6 +285,19 @@
         int idx = (int)indexPath.row;
         MusicItem *item = self.musics[idx];
         cell.music = item;
+        __weak typeof(self) weakSelf = self;
+        cell.removeButtonBlock = ^(NSString *songMid) {
+            [[RCPlayer sharedPlayer] removeMusicInPlayList:songMid];
+            [weakSelf p_initData];
+            [weakSelf p_scrollTableView];
+        };
+        if ([RCPlayer sharedPlayer].curMusic && [item.songMid isEqualToString:[RCPlayer sharedPlayer].curMusic.songMid]) {
+            cell.isPlaying = YES;
+            [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        }
+        else {
+            cell.isPlaying = NO;
+        }
     }
     
     return cell;

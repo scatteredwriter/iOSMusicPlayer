@@ -28,7 +28,6 @@
 @property (nonatomic, strong) UIButton *nextButton;
 @property (nonatomic, strong) PlayProgressSlider *progressSlider;
 @property (nonatomic, strong) PopupPlayListView *playListView;
-@property (nonatomic, assign) BOOL isPause;
 @end
 
 @implementation CurMusicViewController
@@ -105,6 +104,7 @@
     [self.previousButton setImage:[UIImage imageNamed:@"player_previous"] forState:UIControlStateNormal];
     [self.previousButton setImage:[UIImage imageNamed:@"player_previous"] forState:UIControlStateHighlighted];
     self.previousButton.contentEdgeInsets = UIEdgeInsetsZero;
+    [self.previousButton addTarget:self action:@selector(previousButtonClickHandler) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.previousButton];
     
     self.nextButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -113,6 +113,7 @@
     [self.nextButton setImage:[UIImage imageNamed:@"player_next"] forState:UIControlStateNormal];
     [self.nextButton setImage:[UIImage imageNamed:@"player_next"] forState:UIControlStateHighlighted];
     self.nextButton.contentEdgeInsets = UIEdgeInsetsZero;
+    [self.nextButton addTarget:self action:@selector(nextButtonClickHandler) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.nextButton];
     
     self.albumImgView = [[UIImageView alloc] init];
@@ -133,8 +134,7 @@
 
 - (void)p_initPlayState {
     _player = [RCPlayer sharedPlayer];
-    self.isPause = _player.isPause;
-    if (self.isPause) {
+    if (_player.isPause) {
         [self.playButton setImage:[UIImage imageNamed:@"player_play"] forState:UIControlStateNormal];
         [self.playButton setImage:[UIImage imageNamed:@"player_play"] forState:UIControlStateHighlighted];
     }
@@ -149,6 +149,7 @@
         self.singerLabel.text = _player.curMusic.singerName;
         self.albumNameLabel.text = _player.curMusic.albumName;
         self.playButton.enabled = YES;
+        [self.progressSlider updateCurValue:(CMTimeGetSeconds(_player.curPlayerItem.currentTime) / CMTimeGetSeconds(_player.curPlayerItem.duration))];
         [self.progressSlider setCurProgress:_player.curPlayerItem.currentTime];
         [self.progressSlider setMaxProgress:_player.curPlayerItem.duration];
         if ([RCPlayer sharedPlayer].status == RCPlayerStatusFinished) {
@@ -210,14 +211,12 @@
     [self.playButton setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateNormal];
     [self.playButton setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateHighlighted];
     self.playButton.enabled = YES;
-    self.isPause = NO;
 }
 
 - (void)p_updatePauseState {
     [self.playButton setImage:[UIImage imageNamed:@"player_play"] forState:UIControlStateNormal];
     [self.playButton setImage:[UIImage imageNamed:@"player_play"] forState:UIControlStateHighlighted];
     self.playButton.enabled = YES;
-    self.isPause = YES;
 }
 
 - (void)playButtonClickHandler {
@@ -236,6 +235,14 @@
     }];
 }
 
+- (void)nextButtonClickHandler {
+    [[RCPlayer sharedPlayer] nextMusic];
+}
+
+- (void)previousButtonClickHandler {
+    [[RCPlayer sharedPlayer] previousMusic];
+}
+
 #pragma mark - RCPlayer delegate
 
 - (void)RCPlayer:(id)player UpdateProgress:(CMTime)progress {
@@ -249,6 +256,7 @@
 
 - (void)RCPlayer:(id)player UpdateMusic:(nonnull MusicItem *)newMusic Immediately:(BOOL)immediately {
     if (newMusic) {
+        [self.playListView reloadData];
         [self.progressSlider setCurProgress:CMTimeMake(0.0, 1.0)];
         [self.progressSlider updateCurValue:0];
         [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
@@ -275,7 +283,13 @@
 
 - (void)RCPlayerPlayFinished:(id)player {
     [self p_updatePauseState];
-//    self.playButton.enabled = NO;
+    self.progressSlider.curProgress = CMTimeMake(0.0, 1.0);
+    self.progressSlider.maxProgress = CMTimeMake(0.0, 1.0);
+    [self.albumImgView setImage:[UIImage imageNamed:@"player_cd"]];
+    [_bgImgView setImage:[UIImage imageNamed:@"player_cd"]];
+    self.songNameLabel.text = @"";
+    self.singerLabel.text = @"";
+    self.albumNameLabel.text = @"";
 }
 
 #pragma mark - PlayProgressSlider delegate

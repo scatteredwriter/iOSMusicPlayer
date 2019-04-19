@@ -36,22 +36,6 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
             _status = RCPlayerStatusUnknown;
             self.playImmediately = YES;
             self.delegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-            
-            if(!_periodicTimeObserver) {
-                // 监听播放进度，(1.0/1.0)秒监听一次
-                __weak RCPlayer *weakSelf = self;
-                _periodicTimeObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-                    Float64 current = CMTimeGetSeconds(time);
-                    Float64 duration = CMTimeGetSeconds(self.curPlayerItem.duration);
-                    if (weakSelf.delegates.count && CMTIME_IS_VALID(time) && current && duration) {
-                        for (__weak id<RCPlayerDelegate> delegate in weakSelf.delegates) {
-                            if(delegate && [delegate respondsToSelector:@selector(RCPlayer:UpdateProgress:)]) {
-                                [delegate RCPlayer:self UpdateProgress:time];
-                            }
-                        }
-                    }
-                }];
-            }
 
             [self recoverCurMusic];
             
@@ -73,6 +57,31 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
         _sharedPlayer = [[RCPlayer alloc] init];
     }
     return _sharedPlayer;
+}
+
+- (void)p_addTimeObserver {
+    if(!_periodicTimeObserver) {
+        // 监听播放进度，(1.0/1.0)秒监听一次
+        __weak RCPlayer *weakSelf = self;
+        _periodicTimeObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+            Float64 current = CMTimeGetSeconds(time);
+            Float64 duration = CMTimeGetSeconds(self.curPlayerItem.duration);
+            if (weakSelf.delegates.count && CMTIME_IS_VALID(time) && current && duration) {
+                for (__weak id<RCPlayerDelegate> delegate in weakSelf.delegates) {
+                    if(delegate && [delegate respondsToSelector:@selector(RCPlayer:UpdateProgress:)]) {
+                        [delegate RCPlayer:self UpdateProgress:time];
+                    }
+                }
+            }
+        }];
+    }
+}
+
+- (void)p_removeTimeObserver {
+    if (_periodicTimeObserver) {
+        [_player removeTimeObserver:_periodicTimeObserver];
+        _periodicTimeObserver = nil;
+    }
 }
 
 - (void)recoverCurMusic {
@@ -103,6 +112,43 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 - (void)playMusic:(MusicItem *)music Immediately:(BOOL)immediately {
     self.playImmediately = immediately;
     [self playMusic:music];
+}
+
+- (void)nextMusic {
+    if (!self.curMusic)
+        return;
+    MusicItem *music = [[PlayListDAO sharedPlayListDAO] getNextMusicBysongMid:self.curMusic.songMid];
+    if (music) {
+        [self playMusic:music];
+    }
+}
+
+- (void)previousMusic {
+    if (!self.curMusic)
+        return;
+    MusicItem *music = [[PlayListDAO sharedPlayListDAO] getPreviousMusicBysongMid:self.curMusic.songMid];
+    if (music) {
+        [self playMusic:music];
+    }
+}
+
+- (void)removeMusicInPlayList:(NSString *)songMid {
+    if (self.curMusic && self.curPlayerItem && [self.curMusic.songMid isEqualToString:songMid]) {
+        [self.curPlayerItem removeObserver:self forKeyPath:@"status"];
+        MusicItem *nextMusic = [[PlayListDAO sharedPlayListDAO] getNextMusicBysongMid:self.curMusic.songMid];
+        if (!nextMusic || [nextMusic.songMid isEqualToString:self.curMusic.songMid]) {
+            _status = RCPlayerStatusFinished;
+            [self p_pause];
+            [_player seekToTime:CMTimeMake(0.0, 1.0)];
+            self.curPlayerItem = nil;
+            self.curMusic = nil;
+            [self p_finished];
+        }
+        else {
+            [self playMusic:nextMusic];
+        }
+    }
+    [[PlayListDAO sharedPlayListDAO] removeMusicBysongMid:songMid];
 }
 
 - (void)playOrPause {
@@ -216,6 +262,7 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     _status = RCPlayerStatusReadyToPlay;
     // 开始处理远程控制
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    [self p_addTimeObserver];
     if (self.playImmediately) {
         [self p_play];
     }
@@ -264,6 +311,7 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 - (void)p_finished {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    [self p_removeTimeObserver];
     if (self.delegates.count > 0) {
         for (__weak id<RCPlayerDelegate> delegate in self.delegates) {
             if (delegate && [delegate respondsToSelector:@selector(RCPlayerPlayFinished:)]) {
@@ -307,9 +355,18 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 - (void)playFinished:(NSNotification *)notification {
     NSLog(@"[RCPlayer playFinished:]: PLAY FINISHED.");
     if (self.curPlayerItem)
-        [self.curPlayerItem removeObserver:self forKeyPath:@"status"];
+        @try {
+            [self.curPlayerItem removeObserver:self forKeyPath:@"status"];
+        } @catch (NSException *exception) {
+            NSLog(@"[RCPlayer playFinished:]: remove observer forKeyPath status from self.curPlayItem FAILED!\n%@", exception);
+        }
     _status = RCPlayerStatusFinished;
-    [self p_finished];
+    if ([PlayListDAO sharedPlayListDAO].count > 0) {
+        [self nextMusic];
+    }
+    else {
+        [self p_finished];
+    }
 }
 
 // 远程控制处理

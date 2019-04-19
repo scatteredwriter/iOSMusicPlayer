@@ -112,6 +112,162 @@ static PlayListDAO *_sharedPlayListDAO;
     return nil;
 }
 
+- (MusicItem *)getNextMusicBysongMid:(NSString *)songMid {
+    if (_hasProblem || !songMid || !songMid.length)
+        return nil;
+    
+    const char *db_path = [self.dbFilePath UTF8String];
+    if (sqlite3_open(db_path, &db) == SQLITE_OK) {
+        const char *select_rowid_sql = "SELECT rowid FROM Music WHERE songMid=?";
+        sqlite3_stmt *statement;
+        
+        if (sqlite3_prepare_v2(db, select_rowid_sql, -1, &statement, NULL) == SQLITE_OK) {
+            sqlite3_bind_text(statement, 1, [songMid UTF8String], -1, NULL);
+            // 查找给定的歌曲
+            if (sqlite3_step(statement) == SQLITE_ROW) {
+                sqlite3_int64 rowid = sqlite3_column_int64(statement, 0);
+                sqlite3_finalize(statement);
+                const char *select_music_sql = "SELECT * FROM Music WHERE rowid<? ORDER BY rowid DESC LIMIT 1";
+                
+                if (sqlite3_prepare_v2(db, select_music_sql, -1, &statement, NULL) == SQLITE_OK) {
+                    sqlite3_bind_int64(statement, 1, rowid);
+                    // 按rowid降序查找rowid比给定歌曲小的记录，取第一条，即比给定歌曲早一条插入的记录
+                    if (sqlite3_step(statement) == SQLITE_ROW) {
+                        MusicItem *music = [[MusicItem alloc] init];
+                        music.songMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 0)];
+                        music.songName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 1)];
+                        music.singerName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 2)];
+                        music.albumName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 3)];
+                        music.albumImgUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 4)];
+                        music.albumLargeImgUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 5)];
+                        music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
+                        music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
+                        NSLog(@"[PlayListDAO getNextMusicBysongMid]: GET MUSIC(songMid: %@, songName: %@).", music.songMid, music.songName);
+                        sqlite3_finalize(statement);
+                        sqlite3_close(db);
+                        return music;
+                    }
+                    else {
+                        NSLog(@"[PlayListDAO getNextMusicBysongMid]: NOT GET THE NEXT OF MUSIC(songMid: %@). TRY TO GET THE FIRST MUSIC.", songMid);
+                        sqlite3_finalize(statement);
+                        const char *select_first_music_sql = "SELECT * FROM Music ORDER BY rowid DESC LIMIT 1";
+                        
+                        if (sqlite3_prepare_v2(db, select_first_music_sql, -1, &statement, NULL) == SQLITE_OK) {
+                            // 按rowid降序查找记录，取第一条，即最晚插入的记录
+                            if (sqlite3_step(statement) == SQLITE_ROW) {
+                                MusicItem *music = [[MusicItem alloc] init];
+                                music.songMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 0)];
+                                music.songName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 1)];
+                                music.singerName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 2)];
+                                music.albumName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 3)];
+                                music.albumImgUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 4)];
+                                music.albumLargeImgUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 5)];
+                                music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
+                                music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
+                                NSLog(@"[PlayListDAO getNextMusicBysongMid]: GET FIRST MUSIC(songMid: %@, songName: %@).", music.songMid, music.songName);
+                                sqlite3_finalize(statement);
+                                sqlite3_close(db);
+                                return music;
+                            }
+                            else {
+                                NSLog(@"[PlayListDAO getNextMusicBysongMid]: NOT GET THE FIRST MUSIC!");
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                NSLog(@"[PlayListDAO getNextMusicBysongMid]: NOT GET MUSIC(songMid: %@).", songMid);
+            }
+        }
+        sqlite3_finalize(statement);
+    }
+    else {
+        NSLog(@"[PlayListDAO getNextMusicBysongMid]: SQLITE OPEN FAILED!");
+        _hasProblem = YES;
+    }
+    sqlite3_close(db);
+    return nil;
+}
+
+- (MusicItem *)getPreviousMusicBysongMid:(NSString *)songMid {
+    if (_hasProblem || !songMid || !songMid.length)
+        return nil;
+    
+    const char *db_path = [self.dbFilePath UTF8String];
+    if (sqlite3_open(db_path, &db) == SQLITE_OK) {
+        const char *select_rowid_sql = "SELECT rowid FROM Music WHERE songMid=?";
+        sqlite3_stmt *statement;
+        
+        if (sqlite3_prepare_v2(db, select_rowid_sql, -1, &statement, NULL) == SQLITE_OK) {
+            sqlite3_bind_text(statement, 1, [songMid UTF8String], -1, NULL);
+            // 查找给定的歌曲
+            if (sqlite3_step(statement) == SQLITE_ROW) {
+                sqlite3_int64 rowid = sqlite3_column_int64(statement, 0);
+                sqlite3_finalize(statement);
+                const char *select_music_sql = "SELECT * FROM Music WHERE rowid>? ORDER BY rowid LIMIT 1";
+                
+                if (sqlite3_prepare_v2(db, select_music_sql, -1, &statement, NULL) == SQLITE_OK) {
+                    sqlite3_bind_int64(statement, 1, rowid);
+                    // 按rowid升序查找rowid比给定歌曲大的记录，取第一条，即比给定歌曲晚一条插入的记录
+                    if (sqlite3_step(statement) == SQLITE_ROW) {
+                        MusicItem *music = [[MusicItem alloc] init];
+                        music.songMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 0)];
+                        music.songName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 1)];
+                        music.singerName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 2)];
+                        music.albumName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 3)];
+                        music.albumImgUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 4)];
+                        music.albumLargeImgUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 5)];
+                        music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
+                        music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
+                        NSLog(@"[PlayListDAO getPreviousMusicBysongMid]: GET MUSIC(songMid: %@, songName: %@).", music.songMid, music.songName);
+                        sqlite3_finalize(statement);
+                        sqlite3_close(db);
+                        return music;
+                    }
+                    else {
+                        NSLog(@"[PlayListDAO getPreviousMusicBysongMid]: NOT GET THE PREVIOUS OF MUSIC(songMid: %@). TRY TO GET THE LAST MUSIC.", songMid);
+                        sqlite3_finalize(statement);
+                        const char *select_last_music_sql = "SELECT * FROM Music ORDER BY rowid LIMIT 1";
+                        
+                        if (sqlite3_prepare_v2(db, select_last_music_sql, -1, &statement, NULL) == SQLITE_OK) {
+                            // 按rowid升序查找记录，取第一条，即最早插入的记录
+                            if (sqlite3_step(statement) == SQLITE_ROW) {
+                                MusicItem *music = [[MusicItem alloc] init];
+                                music.songMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 0)];
+                                music.songName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 1)];
+                                music.singerName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 2)];
+                                music.albumName = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 3)];
+                                music.albumImgUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 4)];
+                                music.albumLargeImgUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 5)];
+                                music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
+                                music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
+                                NSLog(@"[PlayListDAO getPreviousMusicBysongMid]: GET LAST MUSIC(songMid: %@, songName: %@).", music.songMid, music.songName);
+                                sqlite3_finalize(statement);
+                                sqlite3_close(db);
+                                return music;
+                            }
+                            else {
+                                NSLog(@"[PlayListDAO getPreviousMusicBysongMid]: NOT GET THE LAST MUSIC!");
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                NSLog(@"[PlayListDAO getPreviousMusicBysongMid]: NOT GET MUSIC(songMid: %@).", songMid);
+            }
+        }
+        sqlite3_finalize(statement);
+    }
+    else {
+        NSLog(@"[PlayListDAO getPreviousMusicBysongMid]: SQLITE OPEN FAILED!");
+        _hasProblem = YES;
+    }
+    sqlite3_close(db);
+    return nil;
+}
+
 - (NSArray *)getAllMusics {
     if (_hasProblem)
         return nil;
@@ -142,7 +298,6 @@ static PlayListDAO *_sharedPlayListDAO;
         }
         else {
             NSLog(@"[PlayListDAO getAllMusics]: PREPARE SQL FAILED!");
-            _hasProblem = YES;
         }
     }
     else {
@@ -151,6 +306,40 @@ static PlayListDAO *_sharedPlayListDAO;
     }
     sqlite3_close(db);
     return nil;
+}
+
+- (long)count {
+    if (_hasProblem)
+        return -1;
+    
+    const char *db_path = [self.dbFilePath UTF8String];
+    if (sqlite3_open(db_path, &db) == SQLITE_OK) {
+        const char *select_musics_sql = "SELECT COUNT(*) FROM Music";
+        sqlite3_stmt *statement;
+        
+        if (sqlite3_prepare_v2(db, select_musics_sql, -1, &statement, NULL) == SQLITE_OK) {
+            if (sqlite3_step(statement) == SQLITE_ROW) {
+                long count = sqlite3_column_int64(statement, 0);
+                NSLog(@"[PlayListDAO count]: COUNT OF TABLE Music IS %ld.", count);
+                sqlite3_finalize(statement);
+                sqlite3_close(db);
+                return count;
+            }
+            else {
+                NSLog(@"[PlayListDAO count]: NOT GET COUNT OF TABLE Music!");
+            }
+        }
+        else {
+            NSLog(@"[PlayListDAO count]: PREPARE SQL FAILED!");
+        }
+        sqlite3_finalize(statement);
+    }
+    else {
+        NSLog(@"[PlayListDAO count]: SQLITE OPEN FAILED!");
+        _hasProblem = YES;
+    }
+    sqlite3_close(db);
+    return -1;
 }
 
 - (int)addMusic:(MusicItem *)music {
@@ -189,7 +378,6 @@ static PlayListDAO *_sharedPlayListDAO;
         }
         else {
             NSLog(@"[PlayListDAO addMusic]: PREPARE SQL FAILED!");
-            _hasProblem = YES;
             sqlite3_finalize(statement);
             sqlite3_close(db);
             return -1;
@@ -229,7 +417,6 @@ static PlayListDAO *_sharedPlayListDAO;
         }
         else {
             NSLog(@"[PlayListDAO removeMusicBysongMid:]: PREPARE SQL FAILED!");
-            _hasProblem = YES;
             sqlite3_finalize(statement);
             sqlite3_close(db);
             return -1;

@@ -38,6 +38,9 @@ typedef enum RCPlayerStatus : NSInteger {
 + (RCPlayer *)sharedPlayer;
 - (void)playMusic:(MusicItem *)music;
 - (void)playMusic:(MusicItem *)music Immediately:(BOOL)immediately;
+- (void)nextMusic;
+- (void)previousMusic;
+- (void)removeMusicInPlayList:(NSString *)songMid;
 - (void)addDelegate:(id<RCPlayerDelegate>)delegate;
 - (void)playOrPause;
 - (void)seekToTime:(CMTime)time;
