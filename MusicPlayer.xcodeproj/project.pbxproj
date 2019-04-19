@@ -18,6 +18,9 @@
 		C256D50C225DDFCB00E5842F /* RankingDetailTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = C256D50B225DDFCB00E5842F /* RankingDetailTableController.m */; };
 		C271C8EE22686D2E00257880 /* CurMusicList.plist in Resources */ = {isa = PBXBuildFile; fileRef = C271C8ED22686D2E00257880 /* CurMusicList.plist */; };
 		C271C8FB22686EFC00257880 /* CurMusicDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = C271C8FA22686EFC00257880 /* CurMusicDAO.m */; };
+		C271C8FF22689DA800257880 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C271C8FE22689DA800257880 /* libsqlite3.tbd */; };
+		C271C90222689DE000257880 /* PlayListDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = C271C90122689DE000257880 /* PlayListDAO.m */; };
+		C271C9052268B9CF00257880 /* PopupPlayListView.m in Sources */ = {isa = PBXBuildFile; fileRef = C271C9042268B9CF00257880 /* PopupPlayListView.m */; };
 		C277A88B226618C700098C83 /* PlayProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = C277A88A226618C700098C83 /* PlayProgressSlider.m */; };
 		C27E8BB0225C9181005BA51A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C27E8BAF225C9181005BA51A /* AppDelegate.m */; };
 		C27E8BB8225C9182005BA51A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C27E8BB7225C9182005BA51A /* Assets.xcassets */; };
@@ -148,6 +151,11 @@
 		C271C8F922686EFC00257880 /* CurMusicDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CurMusicDAO.h; sourceTree = "<group>"; };
 		C271C8FA22686EFC00257880 /* CurMusicDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CurMusicDAO.m; sourceTree = "<group>"; };
 		C271C8FC22688FEA00257880 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		C271C8FE22689DA800257880 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		C271C90022689DE000257880 /* PlayListDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayListDAO.h; sourceTree = "<group>"; };
+		C271C90122689DE000257880 /* PlayListDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayListDAO.m; sourceTree = "<group>"; };
+		C271C9032268B9CF00257880 /* PopupPlayListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopupPlayListView.h; sourceTree = "<group>"; };
+		C271C9042268B9CF00257880 /* PopupPlayListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PopupPlayListView.m; sourceTree = "<group>"; };
 		C277A889226618C700098C83 /* PlayProgressSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayProgressSlider.h; sourceTree = "<group>"; };
 		C277A88A226618C700098C83 /* PlayProgressSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayProgressSlider.m; sourceTree = "<group>"; };
 		C27E8BAB225C9181005BA51A /* MusicPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C271C8FF22689DA800257880 /* libsqlite3.tbd in Frameworks */,
 				C2CCBC8A225F3B1800955E52 /* SDWebImage.framework in Frameworks */,
 				C2CCBC7C225F3A7E00955E52 /* AFNetworking.framework in Frameworks */,
 			);
@@ -215,6 +224,8 @@
 				C2076585225F4CA900C37D33 /* RankingMusicCell.m */,
 				C277A889226618C700098C83 /* PlayProgressSlider.h */,
 				C277A88A226618C700098C83 /* PlayProgressSlider.m */,
+				C271C9032268B9CF00257880 /* PopupPlayListView.h */,
+				C271C9042268B9CF00257880 /* PopupPlayListView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -259,6 +270,7 @@
 		C27E8BDC225C924C005BA51A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C271C8FE22689DA800257880 /* libsqlite3.tbd */,
 				C271C8FC22688FEA00257880 /* libsqlite3.0.tbd */,
 			);
 			name = Frameworks;
@@ -298,6 +310,8 @@
 				C24F53EE226226A200A843F4 /* RCPlayer.m */,
 				C271C8F922686EFC00257880 /* CurMusicDAO.h */,
 				C271C8FA22686EFC00257880 /* CurMusicDAO.m */,
+				C271C90022689DE000257880 /* PlayListDAO.h */,
+				C271C90122689DE000257880 /* PlayListDAO.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -510,6 +524,7 @@
 				C271C8FB22686EFC00257880 /* CurMusicDAO.m in Sources */,
 				C24E36A0225DC5B300B0F128 /* MainViewController.m in Sources */,
 				C27E8C00225CB557005BA51A /* UIColor+Additional.m in Sources */,
+				C271C90222689DE000257880 /* PlayListDAO.m in Sources */,
 				C2ACDACE225E2887001C8A8C /* MusicItem.m in Sources */,
 				C2CB33E92260B2A700F77B1A /* NSString+Additional.m in Sources */,
 				C27E8BF5225CA6BA005BA51A /* RankingTableController.m in Sources */,
@@ -518,6 +533,7 @@
 				C277A88B226618C700098C83 /* PlayProgressSlider.m in Sources */,
 				C27E8BF2225CA1E2005BA51A /* MainTabBarController.m in Sources */,
 				C24F53FC22622B9000A843F4 /* NotificationName.m in Sources */,
+				C271C9052268B9CF00257880 /* PopupPlayListView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

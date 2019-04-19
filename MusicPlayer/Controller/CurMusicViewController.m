@@ -12,6 +12,7 @@
 #import "RCPlayer.h"
 #import "NotificationName.h"
 #import "PlayProgressSlider.h"
+#import "PopupPlayListView.h"
 #import <SDWebImage/SDWebImage.h>
 
 @interface CurMusicViewController ()
@@ -26,6 +27,7 @@
 @property (nonatomic, strong) UIButton *previousButton;
 @property (nonatomic, strong) UIButton *nextButton;
 @property (nonatomic, strong) PlayProgressSlider *progressSlider;
+@property (nonatomic, strong) PopupPlayListView *playListView;
 @property (nonatomic, assign) BOOL isPause;
 @end
 
@@ -86,6 +88,7 @@
     [self.playListButton setImage:[UIImage imageNamed:@"player_list"] forState:UIControlStateNormal];
     [self.playListButton setImage:[UIImage imageNamed:@"player_list"] forState:UIControlStateHighlighted];
     self.playListButton.contentEdgeInsets = UIEdgeInsetsZero;
+    [self.playListButton addTarget:self action:@selector(playListButtonClickHandler) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.playListButton];
     
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -120,6 +123,11 @@
     self.progressSlider.delegate = self;
     [self.view addSubview:self.progressSlider];
     
+    self.playListView = [[PopupPlayListView alloc] init];
+//    __weak typeof(self) weakSelf = self;
+    self.playListView.closeCompleteBlock = ^{
+    };
+    
     [self p_initPlayState];
 }
 
@@ -135,7 +143,7 @@
         [self.playButton setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateHighlighted];
     }
     if (_player.curMusic && _player.curPlayerItem) {
-        [_bgImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumImgUrl]];
+        [_bgImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
         [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
         self.songNameLabel.text = _player.curMusic.songName;
         self.singerLabel.text = _player.curMusic.singerName;
@@ -223,6 +231,11 @@
     }
 }
 
+- (void)playListButtonClickHandler {
+    [self.playListView popupView:^{
+    }];
+}
+
 #pragma mark - RCPlayer delegate
 
 - (void)RCPlayer:(id)player UpdateProgress:(CMTime)progress {
@@ -238,7 +251,8 @@
     if (newMusic) {
         [self.progressSlider setCurProgress:CMTimeMake(0.0, 1.0)];
         [self.progressSlider updateCurValue:0];
-        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:nil];
+        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
+        [_bgImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
         self.songNameLabel.text = newMusic.songName;
         self.singerLabel.text = newMusic.singerName;
         self.albumNameLabel.text = newMusic.albumName;
@@ -246,6 +260,7 @@
         if (immediately) {
             [self p_updatePlayState];
         }
+        [self viewWillLayoutSubviews];
     }
 }
 

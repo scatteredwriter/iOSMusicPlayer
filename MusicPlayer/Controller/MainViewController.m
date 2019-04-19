@@ -9,12 +9,14 @@
 #import "MainViewController.h"
 #import "MainTabBarController.h"
 #import "MusicControlBar.h"
+#import "PopupPlayListView.h"
 #import "UIViewController+Additional.h"
 
 #define MUSIC_CONTROL_BAR_HEIGHT 70
 
 @interface MainViewController ()
-@property (nonnull, strong) UIWindow *mainWindow;
+@property (nonatomic, strong) UIWindow *mainWindow;
+@property (nonatomic, strong) PopupPlayListView *playListView;
 @end
 
 @implementation MainViewController
@@ -35,6 +37,12 @@
     self.musicControlBar = [[MusicControlBar alloc] init];
     self.musicControlBar.delegate = self;
     [self.view addSubview:self.musicControlBar];
+    
+    self.playListView = [[PopupPlayListView alloc] init];
+    __weak typeof(self) weakSelf = self;
+    self.playListView.closeCompleteBlock = ^{
+        weakSelf.mainWindow.userInteractionEnabled = YES;
+    };
 }
 
 - (void)viewWillLayoutSubviews {
@@ -60,6 +68,13 @@
 - (void)presentViewControllerDismissed:(BOOL)dismissed {
     self.mainWindow.hidden = NO;
     self.musicControlBar.hidden = NO;
+}
+
+- (void)popupPlayListView {
+    __weak typeof(self) weakSelf = self;
+    [self.playListView popupView:^{
+        weakSelf.mainWindow.userInteractionEnabled = NO;
+    }];
 }
 
 @end

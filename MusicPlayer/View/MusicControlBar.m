@@ -74,6 +74,7 @@
         [self.playListButton setImage:[UIImage imageNamed:@"list"] forState:UIControlStateNormal];
         [self.playListButton setImage:[UIImage imageNamed:@"list"] forState:UIControlStateHighlighted];
         self.playListButton.contentEdgeInsets = UIEdgeInsetsZero;
+        [self.playListButton addTarget:self action:@selector(playListButtonClickHandler) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.playListButton];
         
         self.albumImgView = [[UIImageView alloc] init];
@@ -154,6 +155,12 @@
 
 - (void)playButtonClickHandler {
     [[RCPlayer sharedPlayer] playOrPause];
+}
+
+- (void)playListButtonClickHandler {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popupPlayListView)]) {
+        [self.delegate popupPlayListView];
+    }
 }
 
 #pragma mark - RCPlayer delegate

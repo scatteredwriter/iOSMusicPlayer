@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)presentViewController:(UIViewController *)controller;
 - (void)presentViewControllerDismissed:(BOOL)dismissed;
+- (void)popupPlayListView;
 
 @end
 

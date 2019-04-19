@@ -11,6 +11,7 @@
 #import "QQMusicAPI.h"
 #import "RCHTTPSessionManager.h"
 #import "CurMusicDAO.h"
+#import "PlayListDAO.h"
 #import <SDWebImage/SDWebImage.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
@@ -92,6 +93,7 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         if (music.musicUrl) {
             NSLog(@"[RCPlayer playMusic:]: get musicUrl.");
+            [[PlayListDAO sharedPlayListDAO] addMusic:music];
             self.curMusic = music;
             [self createNewPlayerItem:[NSURL URLWithString:music.musicUrl]];
         }
