@@ -128,6 +128,7 @@
         MusicItem *item = [[MusicItem alloc] init];
         item.songName = _data[idx][@"title"];
         item.songMid = _data[idx][@"mid"];
+        item.songId = [((NSString *)_data[idx][@"id"]) integerValue];
         item.mediaMid = _data[idx][@"file"][@"media_mid"];
         item.albumMid = _data[idx][@"album"][@"mid"];
         item.albumName = _data[idx][@"album"][@"title"];
