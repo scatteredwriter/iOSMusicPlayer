@@ -9,6 +9,7 @@
 #import "MainTabBarController.h"
 #import "RankingTableController.h"
 #import "SearchTableController.h"
+#import "DownloadViewController.h"
 #import "UIColor+Additional.h"
 #import "Color.h"
 
@@ -32,9 +33,14 @@
     searchController.tabBarItem.image = [UIImage imageNamed:@"search"];
     searchController.tabBarItem.title = @"搜索";
     
+    DownloadViewController *downloadController = [[DownloadViewController alloc] init];
+    downloadController.tabBarItem.image = [UIImage imageNamed:@"music_library"];
+    downloadController.tabBarItem.title = @"本地";
+    
     self.viewControllers = @[
                              [[UINavigationController alloc] initWithRootViewController:rankingController],
-                             [[UINavigationController alloc] initWithRootViewController:searchController]
+                             [[UINavigationController alloc] initWithRootViewController:searchController],
+                             [[UINavigationController alloc] initWithRootViewController:downloadController]
                              ];
     self.selectedIndex = 0;
 }
