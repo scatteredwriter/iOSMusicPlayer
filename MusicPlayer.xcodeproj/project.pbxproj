@@ -10,6 +10,7 @@
 		C2076586225F4CA900C37D33 /* RankingMusicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C2076585225F4CA900C37D33 /* RankingMusicCell.m */; };
 		C2076593225F8CD300C37D33 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = C2076592225F8CD300C37D33 /* Color.m */; };
 		C212DE0B226B167A001786B4 /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C212DE0A226B167A001786B4 /* DownloadViewController.m */; };
+		C212DE18226B2F19001786B4 /* LyricView.m in Sources */ = {isa = PBXBuildFile; fileRef = C212DE17226B2F19001786B4 /* LyricView.m */; };
 		C21DB81422647FE0009B4812 /* CurMusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C21DB81322647FE0009B4812 /* CurMusicViewController.m */; };
 		C241A86A225DF4DD00146548 /* UIViewController+Additional.m in Sources */ = {isa = PBXBuildFile; fileRef = C241A869225DF4DD00146548 /* UIViewController+Additional.m */; };
 		C24E36A0225DC5B300B0F128 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C24E369F225DC5B300B0F128 /* MainViewController.m */; };
@@ -136,6 +137,8 @@
 		C2076592225F8CD300C37D33 /* Color.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Color.m; sourceTree = "<group>"; };
 		C212DE09226B167A001786B4 /* DownloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
 		C212DE0A226B167A001786B4 /* DownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
+		C212DE16226B2F19001786B4 /* LyricView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LyricView.h; sourceTree = "<group>"; };
+		C212DE17226B2F19001786B4 /* LyricView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LyricView.m; sourceTree = "<group>"; };
 		C21DB81222647FE0009B4812 /* CurMusicViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CurMusicViewController.h; sourceTree = "<group>"; };
 		C21DB81322647FE0009B4812 /* CurMusicViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CurMusicViewController.m; sourceTree = "<group>"; };
 		C241A868225DF4DD00146548 /* UIViewController+Additional.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Additional.h"; sourceTree = "<group>"; };
@@ -229,6 +232,8 @@
 				C277A88A226618C700098C83 /* PlayProgressSlider.m */,
 				C271C9032268B9CF00257880 /* PopupPlayListView.h */,
 				C271C9042268B9CF00257880 /* PopupPlayListView.m */,
+				C212DE16226B2F19001786B4 /* LyricView.h */,
+				C212DE17226B2F19001786B4 /* LyricView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -529,6 +534,7 @@
 				C271C8FB22686EFC00257880 /* CurMusicDAO.m in Sources */,
 				C24E36A0225DC5B300B0F128 /* MainViewController.m in Sources */,
 				C27E8C00225CB557005BA51A /* UIColor+Additional.m in Sources */,
+				C212DE18226B2F19001786B4 /* LyricView.m in Sources */,
 				C212DE0B226B167A001786B4 /* DownloadViewController.m in Sources */,
 				C271C90222689DE000257880 /* PlayListDAO.m in Sources */,
 				C2ACDACE225E2887001C8A8C /* MusicItem.m in Sources */,

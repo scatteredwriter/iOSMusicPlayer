@@ -13,6 +13,7 @@
 #import "NotificationName.h"
 #import "PlayProgressSlider.h"
 #import "PopupPlayListView.h"
+#import "LyricView.h"
 #import <SDWebImage/SDWebImage.h>
 
 @interface CurMusicViewController ()
@@ -28,6 +29,7 @@
 @property (nonatomic, strong) UIButton *nextButton;
 @property (nonatomic, strong) PlayProgressSlider *progressSlider;
 @property (nonatomic, strong) PopupPlayListView *playListView;
+@property (nonatomic, strong) LyricView *lyricView;
 @end
 
 @implementation CurMusicViewController
@@ -42,7 +44,11 @@
 
     [[RCPlayer sharedPlayer] addDelegate:self];
     
+    self.view.userInteractionEnabled = YES;
     self.view.backgroundColor = [UIColor blackColor];
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewGesture:)];
+    [tapRecognizer setNumberOfTapsRequired:1];
+    [self.view addGestureRecognizer:tapRecognizer];
     
     _bgImgView = [[UIImageView alloc] init];
     _bgImgView.contentMode = UIViewContentModeScaleAspectFill;
@@ -117,6 +123,10 @@
     [self.view addSubview:self.nextButton];
     
     self.albumImgView = [[UIImageView alloc] init];
+    self.albumImgView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *albumViewTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(albumViewGesture:)];
+    [albumViewTapRecognizer setNumberOfTapsRequired:1];
+    [self.albumImgView addGestureRecognizer:albumViewTapRecognizer];
     [self.albumImgView setImage:[UIImage imageNamed:@"player_cd"]];
     [self.view addSubview:self.albumImgView];
     
@@ -128,6 +138,10 @@
 //    __weak typeof(self) weakSelf = self;
     self.playListView.closeCompleteBlock = ^{
     };
+    
+    self.lyricView = [[LyricView alloc] init];
+    self.lyricView.alpha = 0.0;
+    [self.view addSubview:self.lyricView];
     
     [self p_initPlayState];
 }
@@ -152,6 +166,7 @@
         [self.progressSlider updateCurValue:(CMTimeGetSeconds(_player.curPlayerItem.currentTime) / CMTimeGetSeconds(_player.curPlayerItem.duration))];
         [self.progressSlider setCurProgress:_player.curPlayerItem.currentTime];
         [self.progressSlider setMaxProgress:_player.curPlayerItem.duration];
+        self.lyricView.music = _player.curMusic;
         if ([RCPlayer sharedPlayer].status == RCPlayerStatusFinished) {
             [self.progressSlider updateCurValue:1.0];
         }
@@ -183,6 +198,9 @@
     
     CGSize albumImgSize = CGSizeMake(300, 300);
     self.albumImgView.frame = CGRectMake((CGRectGetWidth(self.view.frame) - albumImgSize.width) / 2, (CGRectGetHeight(self.view.frame) - albumImgSize.height) / 2, albumImgSize.width, albumImgSize.height);
+    
+    CGSize lyricViewSize = CGSizeMake(CGRectGetWidth(self.view.frame), 420);
+    self.lyricView.frame = CGRectMake((CGRectGetWidth(self.view.frame) - lyricViewSize.width) / 2, (CGRectGetHeight(self.view.frame) - lyricViewSize.height) / 2, lyricViewSize.width, lyricViewSize.height);
     
     [self.albumNameLabel sizeToFit];
     CGFloat albumNameLabelX = CGRectGetWidth(self.albumNameLabel.frame) > labelMaxWidth ? (CGRectGetMaxX(self.backButton.frame) + 20) : (CGRectGetWidth(self.view.frame) - CGRectGetWidth(self.albumNameLabel.frame)) / 2;
@@ -243,6 +261,22 @@
     [[RCPlayer sharedPlayer] previousMusic];
 }
 
+- (void)viewGesture:(UITapGestureRecognizer *)gesture {
+    [UIView animateWithDuration:0.3 animations:^{
+        self.albumImgView.alpha = 1.0;
+        self.lyricView.alpha = 0.0;
+        self.albumNameLabel.alpha = 1.0;
+    }];
+}
+
+- (void)albumViewGesture:(UITapGestureRecognizer *)gesture {
+    [UIView animateWithDuration:0.3 animations:^{
+        self.albumImgView.alpha = 0.0;
+        self.lyricView.alpha = 1.0;
+        self.albumNameLabel.alpha = 0.0;
+    }];
+}
+
 #pragma mark - RCPlayer delegate
 
 - (void)RCPlayer:(id)player UpdateProgress:(CMTime)progress {
@@ -264,6 +298,7 @@
         self.songNameLabel.text = newMusic.songName;
         self.singerLabel.text = newMusic.singerName;
         self.albumNameLabel.text = newMusic.albumName;
+        self.lyricView.music = newMusic;
         self.playButton.enabled = YES;
         if (immediately) {
             [self p_updatePlayState];
@@ -290,6 +325,7 @@
     self.songNameLabel.text = @"";
     self.singerLabel.text = @"";
     self.albumNameLabel.text = @"";
+    [self.lyricView clearLyric];
 }
 
 #pragma mark - PlayProgressSlider delegate
