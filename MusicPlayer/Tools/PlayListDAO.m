@@ -54,7 +54,7 @@ static PlayListDAO *_sharedPlayListDAO;
         albumLargeImgUrl TEXT,\
         mediaMid TEXT,\
         albumMid TEXT,\
-        songId TEXT);";
+        songId INTEGER);";
         if (sqlite3_exec(db, create_music_table_sql, NULL, NULL, NULL) == SQLITE_OK) {
             NSLog(@"[PlayListDAO p_createMusicTable]: CREATE TABLE Music SUCCESSFULLY OR TABLE Music EXISTS.");
         }
