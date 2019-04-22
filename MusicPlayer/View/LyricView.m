@@ -21,9 +21,6 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
-//        [self addSubview:self.effectView];
-        
         self.textView = [[UITextView alloc] init];
         self.textView.backgroundColor = [UIColor clearColor];
         self.textView.editable = NO;
@@ -71,16 +68,16 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setLineSpacing:18];
     [paragraphStyle setAlignment:NSTextAlignmentCenter];
+    self.textView.text = @"";
+    [self.textView scrollRangeToVisible:NSMakeRange(0, 0)];
     self.textView.attributedText = [[NSAttributedString alloc] initWithString:self.lyric attributes:@{ NSParagraphStyleAttributeName:paragraphStyle,
         NSForegroundColorAttributeName:[UIColor whiteColor],
         NSFontAttributeName:[UIFont systemFontOfSize:18]}];
-    [self.textView scrollRangeToVisible:NSMakeRange(0, 0)];
+    [self.textView scrollRangeToVisible:NSMakeRange(0, self.textView.text.length ? 1 : 0)];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    self.effectView.frame = self.bounds;
     self.textView.frame = CGRectMake(15, 0, CGRectGetWidth(self.frame) - 15 * 2, CGRectGetHeight(self.frame));
 }
 
