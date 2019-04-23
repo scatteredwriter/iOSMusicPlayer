@@ -15,6 +15,8 @@
 #import "BaseMusicCell.h"
 #import "MusicItem.h"
 #import "RCPlayer.h"
+#import "DownloadManager.h"
+#import "DownloadedDAO.h"
 
 #define CELL_HEIGHT 80
 
@@ -144,6 +146,12 @@
     }
 }
 
+- (void)p_downloadMusic:(MusicItem *)music {
+    if (!music)
+        return;
+    [[DownloadManager sharedDownloadManager] newDownloadTask:music];
+}
+
 #pragma mark - Search bar delegate
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
@@ -175,6 +183,13 @@
         int idx = (int)indexPath.row;
         MusicItem *item = self.musics[idx];
         cell.music = item;
+        if ([[DownloadedDAO sharedDownloadedDAO] getDownloadedBysongMid:cell.music.songMid]) {
+            cell.downloadButtonEnabled = NO;
+        }
+        __weak typeof(self) weakSelf = self;
+        cell.downloadButtonBlock = ^(MusicItem * _Nonnull music) {
+            [weakSelf p_downloadMusic:music];
+        };
         
         if (cell.music.payPlay) {
             cell.selectionStyle = UITableViewCellSelectionStyleNone;

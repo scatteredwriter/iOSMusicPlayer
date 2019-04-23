@@ -13,6 +13,9 @@
 		C212DE18226B2F19001786B4 /* LyricView.m in Sources */ = {isa = PBXBuildFile; fileRef = C212DE17226B2F19001786B4 /* LyricView.m */; };
 		C21DB81422647FE0009B4812 /* CurMusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C21DB81322647FE0009B4812 /* CurMusicViewController.m */; };
 		C241A86A225DF4DD00146548 /* UIViewController+Additional.m in Sources */ = {isa = PBXBuildFile; fileRef = C241A869225DF4DD00146548 /* UIViewController+Additional.m */; };
+		C24B54FC226DD17500EEAFD4 /* DownloadedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C24B54FB226DD17500EEAFD4 /* DownloadedItem.m */; };
+		C24B5509226DD20B00EEAFD4 /* DownloadedDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = C24B5508226DD20B00EEAFD4 /* DownloadedDAO.m */; };
+		C24B550C226DE15100EEAFD4 /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C24B550B226DE15100EEAFD4 /* DownloadManager.m */; };
 		C24E36A0225DC5B300B0F128 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C24E369F225DC5B300B0F128 /* MainViewController.m */; };
 		C24E36A4225DC6CE00B0F128 /* MusicControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C24E36A3225DC6CE00B0F128 /* MusicControlBar.m */; };
 		C24F53EF226226A200A843F4 /* RCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F53EE226226A200A843F4 /* RCPlayer.m */; };
@@ -143,6 +146,12 @@
 		C21DB81322647FE0009B4812 /* CurMusicViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CurMusicViewController.m; sourceTree = "<group>"; };
 		C241A868225DF4DD00146548 /* UIViewController+Additional.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Additional.h"; sourceTree = "<group>"; };
 		C241A869225DF4DD00146548 /* UIViewController+Additional.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Additional.m"; sourceTree = "<group>"; };
+		C24B54FA226DD17500EEAFD4 /* DownloadedItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadedItem.h; sourceTree = "<group>"; };
+		C24B54FB226DD17500EEAFD4 /* DownloadedItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadedItem.m; sourceTree = "<group>"; };
+		C24B5507226DD20B00EEAFD4 /* DownloadedDAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadedDAO.h; sourceTree = "<group>"; };
+		C24B5508226DD20B00EEAFD4 /* DownloadedDAO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadedDAO.m; sourceTree = "<group>"; };
+		C24B550A226DE15100EEAFD4 /* DownloadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadManager.h; sourceTree = "<group>"; };
+		C24B550B226DE15100EEAFD4 /* DownloadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadManager.m; sourceTree = "<group>"; };
 		C24E369E225DC5B300B0F128 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		C24E369F225DC5B300B0F128 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		C24E36A2225DC6CE00B0F128 /* MusicControlBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MusicControlBar.h; sourceTree = "<group>"; };
@@ -322,6 +331,10 @@
 				C271C8FA22686EFC00257880 /* CurMusicDAO.m */,
 				C271C90022689DE000257880 /* PlayListDAO.h */,
 				C271C90122689DE000257880 /* PlayListDAO.m */,
+				C24B5507226DD20B00EEAFD4 /* DownloadedDAO.h */,
+				C24B5508226DD20B00EEAFD4 /* DownloadedDAO.m */,
+				C24B550A226DE15100EEAFD4 /* DownloadManager.h */,
+				C24B550B226DE15100EEAFD4 /* DownloadManager.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -333,6 +346,8 @@
 				C2ACDAC4225E02BD001C8A8C /* QQMusicAPI.m */,
 				C2ACDACC225E2887001C8A8C /* MusicItem.h */,
 				C2ACDACD225E2887001C8A8C /* MusicItem.m */,
+				C24B54FA226DD17500EEAFD4 /* DownloadedItem.h */,
+				C24B54FB226DD17500EEAFD4 /* DownloadedItem.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -523,8 +538,10 @@
 				C27E8BBE225C9182005BA51A /* main.m in Sources */,
 				C2ACDAC8225E2397001C8A8C /* RCHTTPSessionManager.m in Sources */,
 				C2ACDACB225E2822001C8A8C /* BaseMusicCell.m in Sources */,
+				C24B54FC226DD17500EEAFD4 /* DownloadedItem.m in Sources */,
 				C24E36A4225DC6CE00B0F128 /* MusicControlBar.m in Sources */,
 				C2CB33D522607CEA00F77B1A /* SearchTableController.m in Sources */,
+				C24B550C226DE15100EEAFD4 /* DownloadManager.m in Sources */,
 				C2076586225F4CA900C37D33 /* RankingMusicCell.m in Sources */,
 				C256D50C225DDFCB00E5842F /* RankingDetailTableController.m in Sources */,
 				C241A86A225DF4DD00146548 /* UIViewController+Additional.m in Sources */,
@@ -546,6 +563,7 @@
 				C27E8BF2225CA1E2005BA51A /* MainTabBarController.m in Sources */,
 				C24F53FC22622B9000A843F4 /* NotificationName.m in Sources */,
 				C271C9052268B9CF00257880 /* PopupPlayListView.m in Sources */,
+				C24B5509226DD20B00EEAFD4 /* DownloadedDAO.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,7 @@
 #import "RCHTTPSessionManager.h"
 #import "CurMusicDAO.h"
 #import "PlayListDAO.h"
+#import "DownloadManager.h"
 #import <SDWebImage/SDWebImage.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
@@ -104,7 +105,12 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
             NSLog(@"[RCPlayer playMusic:]: get musicUrl.");
             [[PlayListDAO sharedPlayListDAO] addMusic:music];
             self.curMusic = music;
-            [self createNewPlayerItem:[NSURL URLWithString:music.musicUrl]];
+            if (music.isLocalFile) {
+                [self createNewPlayerItem:[NSURL fileURLWithPath:music.musicUrl]];
+            }
+            else {
+                [self createNewPlayerItem:[NSURL URLWithString:music.musicUrl]];
+            }
         }
     });
 }

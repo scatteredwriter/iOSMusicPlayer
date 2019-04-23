@@ -14,6 +14,8 @@
 #import "RankingMusicCell.h"
 #import "MusicItem.h"
 #import "RCPlayer.h"
+#import "DownloadManager.h"
+#import "DownloadedDAO.h"
 
 #define CELL_HEIGHT 80
 
@@ -100,6 +102,12 @@
     }
 }
 
+- (void)p_downloadMusic:(MusicItem *)music {
+    if (!music)
+        return;
+    [[DownloadManager sharedDownloadManager] newDownloadTask:music];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -121,6 +129,13 @@
         MusicItem *item = self.musics[idx];
         cell.music = item;
         cell.ranking = idx + 1;
+        if ([[DownloadedDAO sharedDownloadedDAO] getDownloadedBysongMid:cell.music.songMid]) {
+            cell.downloadButtonEnabled = NO;
+        }
+        __weak typeof(self) weakSelf = self;
+        cell.downloadButtonBlock = ^(MusicItem * _Nonnull music) {
+            [weakSelf p_downloadMusic:music];
+        };
         
         if (cell.music.payPlay) {
             cell.selectionStyle = UITableViewCellSelectionStyleNone;

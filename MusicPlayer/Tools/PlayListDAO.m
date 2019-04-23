@@ -7,6 +7,7 @@
 //
 
 #import "PlayListDAO.h"
+#import "DownloadManager.h"
 #import <sqlite3.h>
 
 #define DB_FILE_NAME @"MusicPlayer.sqlite3"
@@ -54,7 +55,8 @@ static PlayListDAO *_sharedPlayListDAO;
         albumLargeImgUrl TEXT,\
         mediaMid TEXT,\
         albumMid TEXT,\
-        songId INTEGER);";
+        songId INTEGER,\
+        isLocalFile INTEGER);";
         if (sqlite3_exec(db, create_music_table_sql, NULL, NULL, NULL) == SQLITE_OK) {
             NSLog(@"[PlayListDAO p_createMusicTable]: CREATE TABLE Music SUCCESSFULLY OR TABLE Music EXISTS.");
         }
@@ -92,6 +94,10 @@ static PlayListDAO *_sharedPlayListDAO;
                 music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                 music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                 music.songId = sqlite3_column_int64(statement, 8);
+                music.isLocalFile = (sqlite3_column_int(statement, 9) > 0);
+                if (music.isLocalFile) {
+                    music.musicUrl = [[DownloadManager sharedDownloadManager].musicsDirPath stringByAppendingPathComponent:[NSString stringWithFormat:@"M500%@.mp3", music.mediaMid]];
+                }
                 NSLog(@"[PlayListDAO getMusicBysongMid]: GET MUSIC(songMid: %@, songName: %@).", music.songMid, music.songName);
                 sqlite3_finalize(statement);
                 sqlite3_close(db);
@@ -145,6 +151,10 @@ static PlayListDAO *_sharedPlayListDAO;
                         music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                         music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                         music.songId = sqlite3_column_int64(statement, 8);
+                        music.isLocalFile = (sqlite3_column_int(statement, 9) > 0);
+                        if (music.isLocalFile) {
+                            music.musicUrl = [[DownloadManager sharedDownloadManager].musicsDirPath stringByAppendingPathComponent:[NSString stringWithFormat:@"M500%@.mp3", music.mediaMid]];
+                        }
                         NSLog(@"[PlayListDAO getNextMusicBysongMid]: GET MUSIC(songMid: %@, songName: %@).", music.songMid, music.songName);
                         sqlite3_finalize(statement);
                         sqlite3_close(db);
@@ -168,6 +178,10 @@ static PlayListDAO *_sharedPlayListDAO;
                                 music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                                 music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                                 music.songId = sqlite3_column_int64(statement, 8);
+                                music.isLocalFile = (sqlite3_column_int(statement, 9) > 0);
+                                if (music.isLocalFile) {
+                                    music.musicUrl = [[DownloadManager sharedDownloadManager].musicsDirPath stringByAppendingPathComponent:[NSString stringWithFormat:@"M500%@.mp3", music.mediaMid]];
+                                }
                                 NSLog(@"[PlayListDAO getNextMusicBysongMid]: GET FIRST MUSIC(songMid: %@, songName: %@).", music.songMid, music.songName);
                                 sqlite3_finalize(statement);
                                 sqlite3_close(db);
@@ -225,6 +239,10 @@ static PlayListDAO *_sharedPlayListDAO;
                         music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                         music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                         music.songId = sqlite3_column_int64(statement, 8);
+                        music.isLocalFile = (sqlite3_column_int(statement, 9) > 0);
+                        if (music.isLocalFile) {
+                            music.musicUrl = [[DownloadManager sharedDownloadManager].musicsDirPath stringByAppendingPathComponent:[NSString stringWithFormat:@"M500%@.mp3", music.mediaMid]];
+                        }
                         NSLog(@"[PlayListDAO getPreviousMusicBysongMid]: GET MUSIC(songMid: %@, songName: %@).", music.songMid, music.songName);
                         sqlite3_finalize(statement);
                         sqlite3_close(db);
@@ -248,6 +266,10 @@ static PlayListDAO *_sharedPlayListDAO;
                                 music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                                 music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                                 music.songId = sqlite3_column_int64(statement, 8);
+                                music.isLocalFile = (sqlite3_column_int(statement, 9) > 0);
+                                if (music.isLocalFile) {
+                                    music.musicUrl = [[DownloadManager sharedDownloadManager].musicsDirPath stringByAppendingPathComponent:[NSString stringWithFormat:@"M500%@.mp3", music.mediaMid]];
+                                }
                                 NSLog(@"[PlayListDAO getPreviousMusicBysongMid]: GET LAST MUSIC(songMid: %@, songName: %@).", music.songMid, music.songName);
                                 sqlite3_finalize(statement);
                                 sqlite3_close(db);
@@ -296,6 +318,10 @@ static PlayListDAO *_sharedPlayListDAO;
                 music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                 music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                 music.songId = sqlite3_column_int64(statement, 8);
+                music.isLocalFile = (sqlite3_column_int(statement, 9) > 0);
+                if (music.isLocalFile) {
+                    music.musicUrl = [[DownloadManager sharedDownloadManager].musicsDirPath stringByAppendingPathComponent:[NSString stringWithFormat:@"M500%@.mp3", music.mediaMid]];
+                }
                 
                 [array insertObject:music atIndex:0];
             }
@@ -361,7 +387,7 @@ static PlayListDAO *_sharedPlayListDAO;
     
     const char *db_path = [self.dbFilePath UTF8String];
     if (sqlite3_open(db_path, &db) == SQLITE_OK) {
-        const char *insert_music_sql = "INSERT OR REPLACE INTO Music VALUES(?,?,?,?,?,?,?,?,?)";
+        const char *insert_music_sql = "INSERT OR REPLACE INTO Music VALUES(?,?,?,?,?,?,?,?,?,?)";
         sqlite3_stmt *statement;
         
         if (sqlite3_prepare_v2(db, insert_music_sql, -1, &statement, NULL) == SQLITE_OK) {
@@ -374,6 +400,7 @@ static PlayListDAO *_sharedPlayListDAO;
             sqlite3_bind_text(statement, 7, [music.mediaMid UTF8String], -1, NULL);
             sqlite3_bind_text(statement, 8, [music.albumMid UTF8String], -1, NULL);
             sqlite3_bind_int64(statement, 9, music.songId);
+            sqlite3_bind_int(statement, 10, music.isLocalFile ? 1 : 0);
             if (sqlite3_step(statement) != SQLITE_DONE) {
                 NSLog(@"[PlayListDAO addMusic]: INSERT MUSIC(songMid: %@, songName: %@) FAILED!", music.songMid, music.songName);
                 sqlite3_finalize(statement);

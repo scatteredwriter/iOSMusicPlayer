@@ -22,6 +22,8 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        _downloadButtonEnabled = YES;
+        
         self.songNameLabel = [[UILabel alloc] init];
         self.songNameLabel.font = [UIFont systemFontOfSize:15];
         self.songNameLabel.textColor = [UIColor colorWithHexString:Title_Color];
@@ -37,6 +39,7 @@
         [self.downloadButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateDisabled];
         [self.downloadButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
         [self.downloadButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateHighlighted];
+        [self.downloadButton addTarget:self action:@selector(downloadButtonClickHandler) forControlEvents:UIControlEventTouchUpInside];
         self.downloadButton.contentEdgeInsets = UIEdgeInsetsZero;
         self.downloadButton.enabled = NO;
         [self addSubview:self.downloadButton];
@@ -71,13 +74,18 @@
     if (_music.albumName && _music.singerName) {
         self.descLabel.text = [NSString stringWithFormat:@"%@ - %@", _music.singerName, _music.albumName];
     }
-    self.songNameLabel.enabled = self.descLabel.enabled = self.downloadButton.enabled = !_music.payPlay;
+    self.songNameLabel.enabled = self.descLabel.enabled = self.downloadButton.enabled = (_downloadButtonEnabled && !_music.payPlay);
     [self setNeedsLayout];
 }
 
 - (void)setLabelWidth:(float)labelWidth {
     _labelWidth = labelWidth;
     [self setNeedsLayout];
+}
+
+- (void)setDownloadButtonEnabled:(BOOL)downloadButtonEnabled {
+    _downloadButtonEnabled = downloadButtonEnabled;
+    self.downloadButton.enabled = (_downloadButtonEnabled && (_music && !_music.payPlay));
 }
 
 - (void)layoutSubviews {
@@ -93,6 +101,12 @@
     self.descLabel.frame = CGRectMake(CGRectGetMaxX(self.albumImgView.frame) + 10, CGRectGetMaxY(self.albumImgView.frame) - 13, self.labelWidth, CGRectGetHeight(self.descLabel.frame));
     
     self.downloadButton.frame = CGRectMake(CGRectGetWidth(self.frame) - self.rightMargin - self.addButtonHeightAndWidth, (self.cellHeight  - self.addButtonHeightAndWidth) / 2, self.addButtonHeightAndWidth, self.addButtonHeightAndWidth);
+}
+
+- (void)downloadButtonClickHandler {
+    if (self.downloadButtonBlock && self.music) {
+        self.downloadButtonBlock(self.music);
+    }
 }
 
 @end

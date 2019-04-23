@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) float addButtonHeightAndWidth;
 @property (nonatomic, assign) float albumImgHeightAndWidth;
 @property (nonatomic, assign) float labelWidth;
+@property (nonatomic, assign) BOOL downloadButtonEnabled;
+@property (nonatomic, strong) void (^downloadButtonBlock)(MusicItem *music);
 @end
 
 NS_ASSUME_NONNULL_END

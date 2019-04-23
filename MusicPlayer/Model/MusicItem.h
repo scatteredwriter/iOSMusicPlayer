@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *albumMid;
 @property (nonatomic, assign) NSInteger songId;
 @property (nonatomic, assign) BOOL payPlay;
+@property (nonatomic, assign) BOOL isLocalFile;
 @end
 
 NS_ASSUME_NONNULL_END
