@@ -10,6 +10,7 @@
 #import "RCHTTPSessionManager.h"
 #import "QQMusicAPI.h"
 #import "MusicItem.h"
+#import "DownloadManager.h"
 
 @interface LyricView ()
 @property (nonatomic, copy) NSString *lyric;
@@ -32,7 +33,22 @@
 
 - (void)setMusic:(MusicItem *)music {
     _music = music;
-    [self p_getResp];
+    if (music.isLocalFile) {
+        [self p_getLocalLyricFile];
+    }
+    else {
+        [self p_getResp];
+    }
+}
+
+- (void)p_getLocalLyricFile {
+    self.lyric = [[DownloadManager sharedDownloadManager] getLyricBysongMid:self.music.songMid];
+    if (!self.lyric) {
+        NSLog(@"[LyricView p_getLyricFromFile]: LYRIC FILE READ FAILED! TRY GET LYRIC ONLINE.");
+        [self p_getResp];
+        return;
+    }
+    [self p_initLyric];
 }
 
 - (void)p_getResp {

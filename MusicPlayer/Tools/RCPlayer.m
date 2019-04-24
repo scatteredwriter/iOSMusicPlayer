@@ -89,10 +89,10 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     MusicItem *music = [[CurMusicDAO sharedInstance] getCurMusic];
     if (music && music.mediaMid.length && music.songMid.length) {
         [self playMusic:music Immediately:NO];
-        NSLog(@"[RCPlay recoverCurMusic]: RECOVER CURRENT MUSIC SUCCESSFULLY.");
+        NSLog(@"[RCPlayer recoverCurMusic]: RECOVER CURRENT MUSIC SUCCESSFULLY.");
     }
     else {
-        NSLog(@"[RCPlay recoverCurMusic]: CANNOT RECOVER CURRENT MUSIC!");
+        NSLog(@"[RCPlayer recoverCurMusic]: CANNOT RECOVER CURRENT MUSIC!");
     }
 }
 

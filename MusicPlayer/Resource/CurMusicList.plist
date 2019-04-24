@@ -2,8 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>isLocalFile</key>
+	<false/>
 	<key>songId</key>
-	<string></string>
+	<integer>0</integer>
 	<key>albumMid</key>
 	<string></string>
 	<key>mediaMid</key>

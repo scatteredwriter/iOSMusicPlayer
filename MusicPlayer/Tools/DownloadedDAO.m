@@ -94,8 +94,7 @@ static DownloadedDAO *_sharedDownloadedDAO;
                 music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                 music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                 music.songId = sqlite3_column_int64(statement, 8);
-                music.musicUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 9)];
-                music.musicUrl = [[DownloadManager sharedDownloadManager].musicsDirPath stringByAppendingPathComponent:music.musicUrl];
+                music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBysongMid:music.songMid];
                 music.isLocalFile = YES;
                 NSLog(@"[DownloadedDAO getDownloadedBysongMid]: GET DOWNLOADED_MUSIC(songMid: %@, songName: %@, url: %@).", music.songMid, music.songName, music.musicUrl);
                 sqlite3_finalize(statement);
@@ -141,8 +140,7 @@ static DownloadedDAO *_sharedDownloadedDAO;
                 music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                 music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                 music.songId = sqlite3_column_int64(statement, 8);
-                music.musicUrl = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 9)];
-                music.musicUrl = [[DownloadManager sharedDownloadManager].musicsDirPath stringByAppendingPathComponent:music.musicUrl];
+                music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBysongMid:music.songMid];
                 music.isLocalFile = YES;
                 
                 [array addObject:music];
@@ -259,7 +257,7 @@ static DownloadedDAO *_sharedDownloadedDAO;
     if (!music) {
         return -1;
     }
-    NSString *musicUrl = [[DownloadManager sharedDownloadManager].musicsDirPath stringByAppendingPathComponent:music.musicUrl];
+    NSString *musicUrl = music.musicUrl;
     NSFileManager *fileManager = [[NSFileManager alloc] init];
     if (![fileManager fileExistsAtPath:musicUrl]) {
         NSLog(@"[DownloadedDAO removeDownloadedBysongMid:]: FILE %@ DON'T EXIST!", musicUrl);

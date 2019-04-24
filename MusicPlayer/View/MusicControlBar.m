@@ -14,6 +14,7 @@
 #import "MainViewController.h"
 #import "RCPlayer.h"
 #import "CurMusicViewController.h"
+#import "DownloadManager.h"
 #import <SDWebImage/SDWebImage.h>
 
 #define MUSIC_CONTROL_BAR_HEIGHT 70
@@ -173,7 +174,12 @@
     if (newMusic) {
         [self.progressView setProgress:0.0 animated:NO];
         self.curMusic = newMusic;
-        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:self.curMusic.albumImgUrl] placeholderImage:[UIImage imageNamed:@"cd"]];
+        if (self.curMusic.isLocalFile) {
+            [self.albumImgView setImage:[[DownloadManager sharedDownloadManager] getAlbumImgBysongMid:self.curMusic.songMid]];
+        }
+        else {
+            [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:self.curMusic.albumImgUrl] placeholderImage:[UIImage imageNamed:@"cd"]];
+        }
         self.songNameLabel.text = self.curMusic.songName;
         self.descLabel.text = [NSString stringWithFormat:@"%@ - %@", self.curMusic.singerName, self.curMusic.albumName];
         self.playButton.enabled = YES;

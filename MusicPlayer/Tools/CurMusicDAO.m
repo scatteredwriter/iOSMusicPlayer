@@ -7,6 +7,7 @@
 //
 
 #import "CurMusicDAO.h"
+#import "DownloadManager.h"
 
 #define PLIST_FILE_NAME @"CurMusicList.plist"
 
@@ -59,6 +60,8 @@ static CurMusicDAO *_sharedInstance;
     dict[@"songMid"] = music.songMid;
     dict[@"mediaMid"] = music.mediaMid;
     dict[@"albumMid"] = music.albumMid;
+    dict[@"songId"] = [[NSNumber alloc] initWithInteger:music.songId];
+    dict[@"isLocalFile"] = [[NSNumber alloc] initWithBool:music.isLocalFile];
     [dict writeToFile:self.curMusicListPath atomically:YES];
     NSLog(@"[CurMusicDAO updateCurMusic]: UPDATE CURRENT MUSIC (songName: %@) COMPLETELY.", music.songName);
 }
@@ -75,6 +78,13 @@ static CurMusicDAO *_sharedInstance;
         music.songMid = dict[@"songMid"];
         music.mediaMid = dict[@"mediaMid"];
         music.albumMid = dict[@"albumMid"];
+        music.songId = [((NSString *)dict[@"songId"]) integerValue];
+        music.isLocalFile = [((NSString *)dict[@"isLocalFile"]) boolValue];
+        if (!music.songMid || !music.songMid.length)
+            return nil;
+        if (music.isLocalFile) {
+            music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBysongMid:music.songMid];
+        }
         NSLog(@"[CurMusicDAO getCurMusic]: GET CURRENT MUSIC (songName: %@) FROM %@ COMPLETELY.", music.songName, self.curMusicListPath);
         return music;
     }

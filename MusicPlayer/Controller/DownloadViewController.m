@@ -83,9 +83,9 @@
 @end
 
 @interface DownloadingTableViewCell : DownloadTableViewCell
-- (void)setCurBytes:(int64_t)bytes;
-- (void)setTotalBytes:(int64_t)bytes;
-- (void)updateProgress:(Float64)progress;
+- (void)setCurBytes:(int64_t)bytes byMusic:(MusicItem *)music;
+- (void)setTotalBytes:(int64_t)bytes byMusic:(MusicItem *)music;
+- (void)updateProgress:(Float64)progress byMusic:(MusicItem *)music;
 @end
 
 @interface DownloadingTableViewCell ()
@@ -139,20 +139,26 @@
     self.progressView.frame = CGRectMake(CGRectGetMaxX(self.curBytesLabel.frame) + 15, CGRectGetMidY(self.curBytesLabel.frame) - 2 / 2, CGRectGetMinX(self.totalBytesLabel.frame) - 15 - CGRectGetMaxX(self.curBytesLabel.frame) - 15, 2);
 }
 
-- (void)setCurBytes:(int64_t)bytes {
+- (void)setCurBytes:(int64_t)bytes byMusic:(MusicItem *)music {
+    if (music != self.music)
+        return;
     _curBytes = bytes;
     self.curBytesLabel.text = [NSString stringWithFormat:@"%.2fMB", bytes / 1024.00 / 1024.00];
     [self setNeedsLayout];
 }
 
-- (void)setTotalBytes:(int64_t)bytes {
+- (void)setTotalBytes:(int64_t)bytes byMusic:(MusicItem *)music {
+    if (music != self.music)
+        return;
     _totalBytes = bytes;
     self.totalBytesLabel.text = [NSString stringWithFormat:@"%.2fMB", bytes / 1024.00 / 1024.00];
     [self setNeedsLayout];
 }
 
-- (void)updateProgress:(Float64)progress {
-    [self setCurBytes:(_totalBytes * progress)];
+- (void)updateProgress:(Float64)progress byMusic:(MusicItem *)music {
+    [self setCurBytes:(_totalBytes * progress) byMusic:music];
+    if (music != self.music)
+        return;
     [self.progressView setProgress:progress animated:YES];
 }
 
@@ -209,12 +215,11 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
     __weak typeof(self) weakSelf = self;
     
     _progressUpdateBlock = ^(NSProgress *progress, MusicItem *music) {
-        NSLog(@"[DownloadViewController]: _progressUpdateBlock runs.");
         if (weakSelf.downloadingArrary) {
             for (int i = 0; i < weakSelf.downloadingArrary.count; i++) {
                 DownloadingTableViewCell *cell = [weakSelf.downloadingTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
                 if (cell && cell.music == music) {
-                    [cell updateProgress:progress.fractionCompleted];
+                    [cell updateProgress:progress.fractionCompleted byMusic:music];
                     break;
                 }
             }
@@ -222,7 +227,6 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
     };
     
     _finishedHandlerBlock = ^(MusicItem *music) {
-        NSLog(@"[DownloadViewController]: _finishedHandlerBlock runs.");
         [weakSelf p_initData];
     };
     
@@ -295,8 +299,8 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
         
         for (NSURLSessionDownloadTask *task in [DownloadManager sharedDownloadManager].sessionManager.downloadTasks) {
             if (task.taskIdentifier == item.downloadTaskId) {
-                [cell setTotalBytes:task.countOfBytesExpectedToReceive];
-                [cell setCurBytes:task.countOfBytesReceived];
+                [cell setTotalBytes:task.countOfBytesExpectedToReceive byMusic:item.music];
+                [cell setCurBytes:task.countOfBytesReceived byMusic:item.music];
             }
         }
         cell.music = item.music;

@@ -31,13 +31,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *downloadDirPath;
 @property (nonatomic, copy) NSString *musicsDirPath;
 @property (nonatomic, copy) NSString *albumImgsDirPath;
-@property (nonatomic, copy) NSString *lyrisDirPath;
+@property (nonatomic, copy) NSString *lyricDirPath;
 
 + (DownloadManager *)sharedDownloadManager;
 - (void)newDownloadTask:(MusicItem *)music;
 - (void)cancelDownloadTask:(MusicItem *)music;
 - (void)addProgressReportBlock:(void (^)(NSProgress *progress, MusicItem *music))block;
 - (void)addFinishedHandlerBlock:(void (^)(MusicItem *music))block;
+- (NSString *)getMusicBysongMid:(NSString *)songMid;
+- (NSString *)getLyricBysongMid:(NSString *)songMid;
+- (UIImage *)getAlbumImgBysongMid:(NSString *)songMid;
 @end
 
 NS_ASSUME_NONNULL_END

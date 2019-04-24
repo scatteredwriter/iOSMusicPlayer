@@ -19,6 +19,8 @@
 
 #define CELL_HEIGHT 80
 
+typedef void (^finishedHandlerBlock)(MusicItem *music);
+
 @interface RankingDetailTableController ()
 @property (nonatomic, assign) int index;
 @property (nonatomic, copy) NSArray *data;
@@ -26,6 +28,9 @@
 @end
 
 @implementation RankingDetailTableController
+{
+    finishedHandlerBlock _finishedHandlerBlock;
+}
 
 - (instancetype)initWithIndex:(int)index {
     if (self = [super init]) {
@@ -59,6 +64,13 @@
 //            [UINavigationBar appearance].barTintColor = [UIColor colorWithHexString:@"#407A7D"];
             break;
     }
+    
+    __weak RankingDetailTableController *w_self = self;
+    _finishedHandlerBlock = ^(MusicItem *music) {
+        [w_self.tableView reloadData];
+    };
+    
+    [[DownloadManager sharedDownloadManager] addFinishedHandlerBlock:_finishedHandlerBlock];
     
     [self getData];
 }

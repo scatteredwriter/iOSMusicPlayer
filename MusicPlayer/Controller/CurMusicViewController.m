@@ -14,6 +14,7 @@
 #import "PlayProgressSlider.h"
 #import "PopupPlayListView.h"
 #import "LyricView.h"
+#import "DownloadManager.h"
 #import <SDWebImage/SDWebImage.h>
 
 @interface CurMusicViewController ()
@@ -157,8 +158,14 @@
         [self.playButton setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateHighlighted];
     }
     if (_player.curMusic && _player.curPlayerItem) {
-        [_bgImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
-        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
+        if (_player.curMusic.isLocalFile) {
+            [_bgImgView setImage:[[DownloadManager sharedDownloadManager] getAlbumImgBysongMid:_player.curMusic.songMid]];
+            [self.albumImgView setImage:[[DownloadManager sharedDownloadManager] getAlbumImgBysongMid:_player.curMusic.songMid]];
+        }
+        else {
+            [_bgImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
+            [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:_player.curMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
+        }
         self.songNameLabel.text = _player.curMusic.songName;
         self.singerLabel.text = _player.curMusic.singerName;
         self.albumNameLabel.text = _player.curMusic.albumName;
@@ -293,8 +300,14 @@
         [self.playListView reloadData];
         [self.progressSlider setCurProgress:CMTimeMake(0.0, 1.0)];
         [self.progressSlider updateCurValue:0];
-        [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
-        [_bgImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
+        if (newMusic.isLocalFile) {
+            [_bgImgView setImage:[[DownloadManager sharedDownloadManager] getAlbumImgBysongMid:newMusic.songMid]];
+            [self.albumImgView setImage:[[DownloadManager sharedDownloadManager] getAlbumImgBysongMid:newMusic.songMid]];
+        }
+        else {
+            [_bgImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
+            [self.albumImgView sd_setImageWithURL:[NSURL URLWithString:newMusic.albumLargeImgUrl] placeholderImage:[UIImage imageNamed:@"player_cd"]];
+        }
         self.songNameLabel.text = newMusic.songName;
         self.singerLabel.text = newMusic.singerName;
         self.albumNameLabel.text = newMusic.albumName;

@@ -20,6 +20,8 @@
 
 #define CELL_HEIGHT 80
 
+typedef void (^finishedHandlerBlock)(MusicItem *music);
+
 @interface SearchTableController ()
 @property (nonatomic, strong) UISearchBar *searchTitleView;
 @property (nonatomic ,copy) NSDictionary *zhida;
@@ -32,6 +34,7 @@
 @implementation SearchTableController
 {
     NSArray *_data;
+    finishedHandlerBlock _finishedHandlerBlock;
 }
 
 - (void)viewDidLoad {
@@ -50,6 +53,13 @@
     
     self.page = -1;
     self.isLoading = NO;
+    
+    __weak SearchTableController *w_self = self;
+    _finishedHandlerBlock = ^(MusicItem *music) {
+        [w_self.tableView reloadData];
+    };
+    
+    [[DownloadManager sharedDownloadManager] addFinishedHandlerBlock:_finishedHandlerBlock];
 }
 
 - (void)viewWillLayoutSubviews {
