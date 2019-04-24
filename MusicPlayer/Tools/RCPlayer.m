@@ -401,10 +401,12 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     }];
     [commandCenter.previousTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent * _Nonnull event) {
         //点击了上一首
+        [self previousMusic];
         return MPRemoteCommandHandlerStatusSuccess;
     }];
     [commandCenter.nextTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent * _Nonnull event) {
         //点击了下一首
+        [self nextMusic];
         return MPRemoteCommandHandlerStatusSuccess;
     }];
     // 启用耳机的播放/暂停命令 (耳机上的播放按钮触发的命令)
@@ -431,9 +433,17 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     
     if (playingInfoCenter) {
         NSMutableDictionary *musicInfo = [[NSMutableDictionary alloc] init];
-        UIImageView *imageView = [[UIImageView alloc] init];
-        [imageView sd_setImageWithURL:[NSURL URLWithString:self.curMusic.albumImgUrl]];
-        UIImage *image = imageView.image;
+        
+        UIImage *image;
+        if (self.curMusic.isLocalFile) {
+            image = [[DownloadManager sharedDownloadManager] getAlbumImgBysongMid:self.curMusic.songMid];
+        }
+        else
+        {
+            UIImageView *imageView = [[UIImageView alloc] init];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:self.curMusic.albumImgUrl]];
+            image = imageView.image;
+        }
         MPMediaItemArtwork *albumArt = [[MPMediaItemArtwork alloc] initWithBoundsSize:image.size requestHandler:^UIImage * _Nonnull(CGSize size) {
             return image;
         }];

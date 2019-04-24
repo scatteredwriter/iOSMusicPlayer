@@ -382,6 +382,7 @@ static PlayListDAO *_sharedPlayListDAO;
     // 判断数据库里是否含有该记录
     if ([self getMusicBysongMid:music.songMid]) {
         NSLog(@"[PlayListDAO addMusic]: MUSIC(songMid: %@) WAS IN DB.", music.songMid);
+        [self updateMusicIsLocalFileBysongMid:music.songMid];
         return 0;
     }
     
@@ -460,6 +461,53 @@ static PlayListDAO *_sharedPlayListDAO;
     }
     else {
         NSLog(@"[PlayListDAO removeMusicBysongMid:]: SQLITE OPEN FAILED!");
+        _hasProblem = YES;
+        sqlite3_close(db);
+        return -1;
+    }
+    sqlite3_close(db);
+    return 0;
+}
+
+- (int)updateMusicIsLocalFileBysongMid:(NSString *)songMid {
+    if (_hasProblem || !songMid)
+        return -1;
+    
+    // 判断数据库里是否含有该记录
+    MusicItem *music = [self getMusicBysongMid:songMid];
+    if (!music) {
+        NSLog(@"[PlayListDAO updateMusicIsLocalFileBysongMid]: MUSIC(songMid: %@) WAS NOT IN DB.", songMid);
+        return -1;
+    }
+    
+    const char *db_path = [self.dbFilePath UTF8String];
+    if (sqlite3_open(db_path, &db) == SQLITE_OK) {
+        const char *update_islocalfile_in_music_sql = "UPDATE Music SET isLocalFile=? WHERE songMid=?";
+        sqlite3_stmt *statement;
+        
+        if (sqlite3_prepare_v2(db, update_islocalfile_in_music_sql, -1, &statement, NULL) == SQLITE_OK) {
+            sqlite3_bind_int(statement, 1, music.isLocalFile ? 1 : 0);
+            sqlite3_bind_text(statement, 2, [songMid UTF8String], -1, NULL);
+            if (sqlite3_step(statement) != SQLITE_DONE) {
+                NSLog(@"[PlayListDAO updateMusicIsLocalFileBysongMid]: UPDATE MUSIC(songMid: %@, songName: %@) FAILED!", music.songMid, music.songName);
+                sqlite3_finalize(statement);
+                sqlite3_close(db);
+                return -1;
+            }
+            else {
+                NSLog(@"[PlayListDAO updateMusicIsLocalFileBysongMid]: UPDATE MUSIC(songMid: %@, songName: %@) SUCCESSFULLY.", music.songMid, music.songName);
+            }
+        }
+        else {
+            NSLog(@"[PlayListDAO updateMusicIsLocalFileBysongMid]: PREPARE SQL FAILED!");
+            sqlite3_finalize(statement);
+            sqlite3_close(db);
+            return -1;
+        }
+        sqlite3_finalize(statement);
+    }
+    else {
+        NSLog(@"[PlayListDAO updateMusicIsLocalFileBysongMid]: SQLITE OPEN FAILED!");
         _hasProblem = YES;
         sqlite3_close(db);
         return -1;
