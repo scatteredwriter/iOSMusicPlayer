@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 - (void)RCPlayer:(id)player UpdateProgress:(CMTime)progress;
 - (void)RCPlayer:(id)player UpdateMusic:(MusicItem *)newMusic Immediately:(BOOL)immediately;
-- (void)RCPlayer:(id)player PlayPause:(BOOL)isPause;
+- (void)RCPlayer:(id)player PlayOrPause:(BOOL)isPause;
 - (void)RCPlayerPlayFinished:(id)player;
 
 @end

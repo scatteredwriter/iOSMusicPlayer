@@ -294,8 +294,8 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     self.isPause = NO;
     if (self.delegates.count > 0) {
         for (__weak id<RCPlayerDelegate> delegate in self.delegates) {
-            if (delegate && [delegate respondsToSelector:@selector(RCPlayer:PlayPause:)]) {
-                [delegate RCPlayer:self PlayPause:self.isPause];
+            if (delegate && [delegate respondsToSelector:@selector(RCPlayer:PlayOrPause:)]) {
+                [delegate RCPlayer:self PlayOrPause:self.isPause];
             }
         }
     }
@@ -307,8 +307,8 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     self.isPause = YES;
     if (self.delegates.count > 0) {
         for (__weak id<RCPlayerDelegate> delegate in self.delegates) {
-            if (delegate && [delegate respondsToSelector:@selector(RCPlayer:PlayPause:)]) {
-                [delegate RCPlayer:self PlayPause:self.isPause];
+            if (delegate && [delegate respondsToSelector:@selector(RCPlayer:PlayOrPause:)]) {
+                [delegate RCPlayer:self PlayOrPause:self.isPause];
             }
         }
     }

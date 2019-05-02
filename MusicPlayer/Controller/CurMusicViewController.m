@@ -340,7 +340,7 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
     }
 }
 
-- (void)RCPlayer:(id)player PlayPause:(BOOL)isPause {
+- (void)RCPlayer:(id)player PlayOrPause:(BOOL)isPause {
     if (isPause) {
         [self p_updatePauseState];
     }
