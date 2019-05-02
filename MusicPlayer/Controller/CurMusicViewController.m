@@ -15,7 +15,10 @@
 #import "PopupPlayListView.h"
 #import "LyricView.h"
 #import "DownloadManager.h"
+#import "DownloadedDAO.h"
 #import <SDWebImage/SDWebImage.h>
+
+typedef void (^finishedHandlerBlock)(MusicItem *music);
 
 @interface CurMusicViewController ()
 @property (nonatomic, strong) UIImageView *albumImgView;
@@ -38,6 +41,7 @@
     UIImageView *_bgImgView;
     UIVisualEffectView *_effectView;
     RCPlayer *_player;
+    finishedHandlerBlock _finishedHandlerBlock;
 }
 
 - (void)viewDidLoad {
@@ -103,6 +107,7 @@
     [self.downloadButton setImage:[UIImage imageNamed:@"player_download"] forState:UIControlStateNormal];
     [self.downloadButton setImage:[UIImage imageNamed:@"player_download"] forState:UIControlStateHighlighted];
     self.downloadButton.contentEdgeInsets = UIEdgeInsetsZero;
+    [self.downloadButton addTarget:self action:@selector(downloadButtonClickHandler) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.downloadButton];
     
     self.previousButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -144,6 +149,12 @@
     self.lyricView.alpha = 0.0;
     [self.view addSubview:self.lyricView];
     
+    __weak CurMusicViewController *w_self = self;
+    _finishedHandlerBlock = ^(MusicItem *music) {
+        [w_self p_initPlayState];
+    };
+    [[DownloadManager sharedDownloadManager] addFinishedHandlerBlock:_finishedHandlerBlock];
+    
     [self p_initPlayState];
 }
 
@@ -173,6 +184,9 @@
         [self.progressSlider updateCurValue:(CMTimeGetSeconds(_player.curPlayerItem.currentTime) / CMTimeGetSeconds(_player.curPlayerItem.duration))];
         [self.progressSlider setCurProgress:_player.curPlayerItem.currentTime];
         [self.progressSlider setMaxProgress:_player.curPlayerItem.duration];
+        if ([[DownloadedDAO sharedDownloadedDAO] getDownloadedBysongMid:_player.curMusic.songMid]) {
+            self.downloadButton.enabled = NO;
+        }
         self.lyricView.music = _player.curMusic;
         if ([RCPlayer sharedPlayer].status == RCPlayerStatusFinished) {
             [self.progressSlider updateCurValue:1.0];
@@ -266,6 +280,12 @@
 
 - (void)previousButtonClickHandler {
     [[RCPlayer sharedPlayer] previousMusic];
+}
+
+- (void)downloadButtonClickHandler {
+    if (!_player.curMusic)
+        return;
+    [[DownloadManager sharedDownloadManager] newDownloadTask:_player.curMusic];
 }
 
 - (void)viewGesture:(UITapGestureRecognizer *)gesture {
