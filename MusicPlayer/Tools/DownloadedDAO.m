@@ -94,7 +94,7 @@ static DownloadedDAO *_sharedDownloadedDAO;
                 music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                 music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                 music.songId = sqlite3_column_int64(statement, 8);
-                music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBysongMid:music.songMid];
+                music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBymediaMid:music.mediaMid];
                 music.isLocalFile = YES;
                 NSLog(@"[DownloadedDAO getDownloadedBysongMid]: GET DOWNLOADED_MUSIC(songMid: %@, songName: %@, url: %@).", music.songMid, music.songName, music.musicUrl);
                 sqlite3_finalize(statement);
@@ -140,7 +140,7 @@ static DownloadedDAO *_sharedDownloadedDAO;
                 music.mediaMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 6)];
                 music.albumMid = [[NSString alloc] initWithUTF8String:(const char *)sqlite3_column_text(statement, 7)];
                 music.songId = sqlite3_column_int64(statement, 8);
-                music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBysongMid:music.songMid];
+                music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBymediaMid:music.mediaMid];
                 music.isLocalFile = YES;
                 
                 [array addObject:music];

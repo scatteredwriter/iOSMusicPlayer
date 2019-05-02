@@ -187,9 +187,9 @@ static DownloadManager *_sharedDownloadManager;
     }
 }
 
-- (NSString *)getMusicBysongMid:(NSString *)songMid {
+- (NSString *)getMusicBymediaMid:(NSString *)mediaMid {
     NSString *filePath = self.musicsDirPath;
-    filePath = [filePath stringByAppendingPathComponent:[NSString stringWithFormat:@"M500%@.mp3", songMid]];
+    filePath = [filePath stringByAppendingPathComponent:[NSString stringWithFormat:@"M500%@.mp3", mediaMid]];
     return filePath;
 }
 

@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)cancelDownloadTask:(MusicItem *)music;
 - (void)addProgressReportBlock:(void (^)(NSProgress *progress, MusicItem *music))block;
 - (void)addFinishedHandlerBlock:(void (^)(MusicItem *music))block;
-- (NSString *)getMusicBysongMid:(NSString *)songMid;
+- (NSString *)getMusicBymediaMid:(NSString *)mediaMid;
 - (NSString *)getLyricBysongMid:(NSString *)songMid;
 - (UIImage *)getAlbumImgBysongMid:(NSString *)songMid;
 @end

@@ -83,7 +83,7 @@ static CurMusicDAO *_sharedInstance;
         if (!music.songMid || !music.songMid.length)
             return nil;
         if (music.isLocalFile) {
-            music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBysongMid:music.songMid];
+            music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBymediaMid:music.mediaMid];
         }
         NSLog(@"[CurMusicDAO getCurMusic]: GET CURRENT MUSIC (songName: %@) FROM %@ COMPLETELY.", music.songName, self.curMusicListPath);
         return music;
