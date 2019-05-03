@@ -76,7 +76,7 @@ static DownloadManager *_sharedDownloadManager;
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         NSString *filePath = [self.musicsDirPath stringByAppendingPathComponent:url.lastPathComponent];
         __weak typeof(self) weakSelf = self;
-        __weak MusicItem * weakMusic = music;
+        __weak typeof(music) weakMusic = music;
         
         // 歌曲文件下载
         NSURLSessionDownloadTask *musicDownloadTask = [self.sessionManager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
@@ -96,7 +96,6 @@ static DownloadManager *_sharedDownloadManager;
                 NSLog(@"音频文件下载失败");
             }
             else {
-                weakMusic.musicUrl = [filePath lastPathComponent];
                 NSLog(@"音频文件下载完成, 文件路径: %@", filePath);
                 weakMusic.isLocalFile = YES;
                 [[DownloadedDAO sharedDownloadedDAO] addDownloaded:weakMusic];

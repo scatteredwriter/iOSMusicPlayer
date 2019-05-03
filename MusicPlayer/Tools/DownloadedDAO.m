@@ -55,8 +55,7 @@ static DownloadedDAO *_sharedDownloadedDAO;
         albumLargeImgUrl TEXT,\
         mediaMid TEXT,\
         albumMid TEXT,\
-        songId INTEGER,\
-        musicUrl TEXT);";
+        songId INTEGER);";
         if (sqlite3_exec(db, create_downloaded_music_table_sql, NULL, NULL, NULL) == SQLITE_OK) {
             NSLog(@"[DownloadedDAO p_createDownloadedTable]: CREATE TABLE DownloadedMusic SUCCESSFULLY OR TABLE DownloadedMusic EXISTS.");
         }
@@ -196,7 +195,7 @@ static DownloadedDAO *_sharedDownloadedDAO;
 }
 
 - (int)addDownloaded:(MusicItem *)music {
-    if (_hasProblem || !music || !music.musicUrl || !music.songMid)
+    if (_hasProblem || !music || !music.songMid)
         return -1;
     
     // 判断数据库里是否含有该记录
@@ -207,7 +206,7 @@ static DownloadedDAO *_sharedDownloadedDAO;
     
     const char *db_path = [self.dbFilePath UTF8String];
     if (sqlite3_open(db_path, &db) == SQLITE_OK) {
-        const char *insert_downloaded_music_sql = "INSERT OR REPLACE INTO DownloadedMusic VALUES(?,?,?,?,?,?,?,?,?,?)";
+        const char *insert_downloaded_music_sql = "INSERT OR REPLACE INTO DownloadedMusic VALUES(?,?,?,?,?,?,?,?,?)";
         sqlite3_stmt *statement;
         
         if (sqlite3_prepare_v2(db, insert_downloaded_music_sql, -1, &statement, NULL) == SQLITE_OK) {
@@ -220,15 +219,14 @@ static DownloadedDAO *_sharedDownloadedDAO;
             sqlite3_bind_text(statement, 7, [music.mediaMid UTF8String], -1, NULL);
             sqlite3_bind_text(statement, 8, [music.albumMid UTF8String], -1, NULL);
             sqlite3_bind_int64(statement, 9, music.songId);
-            sqlite3_bind_text(statement, 10, [music.musicUrl UTF8String], -1, NULL);
             if (sqlite3_step(statement) != SQLITE_DONE) {
-                NSLog(@"[DownloadedDAO addDownloaded]: INSERT DOWNLOADED_MUSIC(songMid: %@, songName: %@, url: %@) FAILED!", music.songMid, music.songName, music.musicUrl);
+                NSLog(@"[DownloadedDAO addDownloaded]: INSERT DOWNLOADED_MUSIC(songMid: %@, songName: %@) FAILED!", music.songMid, music.songName);
                 sqlite3_finalize(statement);
                 sqlite3_close(db);
                 return -1;
             }
             else {
-                NSLog(@"[DownloadedDAO addDownloaded]: INSERT DOWNLOADED_MUSIC(songMid: %@, songName: %@, url: %@) SUCCESSFULLY.", music.songMid, music.songName, music.musicUrl);
+                NSLog(@"[DownloadedDAO addDownloaded]: INSERT DOWNLOADED_MUSIC(songMid: %@, songName: %@) SUCCESSFULLY.", music.songMid, music.songName);
             }
         }
         else {

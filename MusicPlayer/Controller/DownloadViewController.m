@@ -219,7 +219,13 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
             for (int i = 0; i < weakSelf.downloadingArrary.count; i++) {
                 DownloadingTableViewCell *cell = [weakSelf.downloadingTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
                 if (cell && cell.music == music) {
+                    for (NSURLSessionDownloadTask *task in [DownloadManager sharedDownloadManager].sessionManager.downloadTasks) {
+                        if (task.taskIdentifier == ((DownloadingItem *)weakSelf.downloadingArrary[i]).downloadTaskId) {
+                            [cell setTotalBytes:task.countOfBytesExpectedToReceive byMusic:music];
+                        }
+                    }
                     [cell updateProgress:progress.fractionCompleted byMusic:music];
+                    [weakSelf p_initData];
                     break;
                 }
             }
@@ -263,8 +269,6 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
             self.downloadedTableView.hidden = YES;
             break;
     }
-    
-    [self p_initData];
 }
 
 - (void)viewWillLayoutSubviews {
