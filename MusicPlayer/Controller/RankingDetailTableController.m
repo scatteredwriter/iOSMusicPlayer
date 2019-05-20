@@ -75,6 +75,11 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
     [self getData];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 - (void)getData {
     NSString *url = [NSString stringWithFormat:RankingAPI, self.index];
     url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
@@ -143,6 +148,8 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
         cell.ranking = idx + 1;
         if ([[DownloadedDAO sharedDownloadedDAO] getDownloadedBysongMid:cell.music.songMid]) {
             cell.downloadButtonEnabled = NO;
+        } else {
+            cell.downloadButtonEnabled = YES;
         }
         __weak typeof(self) weakSelf = self;
         cell.downloadButtonBlock = ^(MusicItem * _Nonnull music) {

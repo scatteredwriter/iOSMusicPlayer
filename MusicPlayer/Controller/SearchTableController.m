@@ -62,6 +62,11 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
     [[DownloadManager sharedDownloadManager] addFinishedHandlerBlock:_finishedHandlerBlock];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
@@ -195,6 +200,8 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
         cell.music = item;
         if ([[DownloadedDAO sharedDownloadedDAO] getDownloadedBysongMid:cell.music.songMid]) {
             cell.downloadButtonEnabled = NO;
+        } else {
+            cell.downloadButtonEnabled = YES;
         }
         __weak typeof(self) weakSelf = self;
         cell.downloadButtonBlock = ^(MusicItem * _Nonnull music) {

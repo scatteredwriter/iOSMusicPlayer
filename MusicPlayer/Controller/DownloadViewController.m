@@ -269,6 +269,12 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
             self.downloadedTableView.hidden = YES;
             break;
     }
+    [self p_initData];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self p_initData];
 }
 
 - (void)viewWillLayoutSubviews {
