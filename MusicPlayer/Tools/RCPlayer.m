@@ -40,6 +40,8 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 
             [self recoverCurMusic];
             
+            AVAudioSession *session = [AVAudioSession sharedInstance];
+            [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:nil];
         }
     }
     return self;
