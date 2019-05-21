@@ -74,7 +74,7 @@
     if (_music.albumName && _music.singerName) {
         self.descLabel.text = [NSString stringWithFormat:@"%@ - %@", _music.singerName, _music.albumName];
     }
-    self.songNameLabel.enabled = self.descLabel.enabled = self.downloadButton.enabled = (_downloadButtonEnabled && !_music.payPlay);
+    self.songNameLabel.enabled = self.descLabel.enabled = self.downloadButton.enabled = !_music.payPlay;
     [self setNeedsLayout];
 }
 
