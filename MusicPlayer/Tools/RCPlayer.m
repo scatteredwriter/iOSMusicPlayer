@@ -103,6 +103,9 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
     dispatch_group_enter(group);
     [self setMusicUrl:music andDispatchGroup:group];
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        if (music.isLocalFile) {
+            music.musicUrl = [[DownloadManager sharedDownloadManager] getMusicBymediaMid:music.mediaMid];
+        }
         if (music.musicUrl) {
             NSLog(@"[RCPlayer playMusic:]: get musicUrl.");
             [[PlayListDAO sharedPlayListDAO] addMusic:music];
@@ -214,7 +217,7 @@ static NSString * const PlayerItemStatusContext = @"PlayerItemStatusContext";
 }
 
 - (void)setMusicUrl:(MusicItem *)music andDispatchGroup:(dispatch_group_t)group {
-    if (!music.songMid || !music.mediaMid) {
+    if (!music.songMid || !music.mediaMid || music.isLocalFile) {
         music.musicUrl = nil;
         dispatch_group_leave(group);
         return;

@@ -97,7 +97,6 @@ static DownloadManager *_sharedDownloadManager;
             }
             else {
                 NSLog(@"音频文件下载完成, 文件路径: %@", filePath);
-                weakMusic.isLocalFile = YES;
                 [[DownloadedDAO sharedDownloadedDAO] addDownloaded:weakMusic];
             }
             

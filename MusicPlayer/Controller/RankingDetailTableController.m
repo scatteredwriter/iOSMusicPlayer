@@ -146,10 +146,16 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
         MusicItem *item = self.musics[idx];
         cell.music = item;
         cell.ranking = idx + 1;
+        BOOL cur_isLocalFile = item.isLocalFile;
         if ([[DownloadedDAO sharedDownloadedDAO] getDownloadedBysongMid:cell.music.songMid]) {
+            item.isLocalFile = YES;
             cell.downloadButtonEnabled = NO;
         } else {
+            item.isLocalFile = NO;
             cell.downloadButtonEnabled = YES;
+        }
+        if (cur_isLocalFile != item.isLocalFile) {
+            item.musicUrl = nil;
         }
         __weak typeof(self) weakSelf = self;
         cell.downloadButtonBlock = ^(MusicItem * _Nonnull music) {
