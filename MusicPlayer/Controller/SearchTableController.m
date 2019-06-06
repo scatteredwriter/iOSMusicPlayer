@@ -133,7 +133,7 @@ typedef void (^finishedHandlerBlock)(MusicItem *music);
     if (_data.count < 20) //已经没有更多内容，令self.page = -1表示不需要下滑加载更多页
         self.page = -1;
     self.isLoading = NO;
-    if (self.musics && self.musics.count > 0) {
+    if (self.musics && self.musics.count > 0 && self.page == 1) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
 }
