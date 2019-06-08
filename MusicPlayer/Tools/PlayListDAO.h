@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)getAllMusics;
 - (int)addMusic:(MusicItem *)music;
 - (int)removeMusicBysongMid:(NSString *)songMid;
-- (int)updateMusicIsLocalFileBysongMid:(NSString *)songMid;
+- (int)updateBysongMid:(NSString *)songMid withIsLocalFile:(BOOL)isLocalFile;
 @end
 
 NS_ASSUME_NONNULL_END

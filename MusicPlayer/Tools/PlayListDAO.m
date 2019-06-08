@@ -382,7 +382,7 @@ static PlayListDAO *_sharedPlayListDAO;
     // 判断数据库里是否含有该记录
     if ([self getMusicBysongMid:music.songMid]) {
         NSLog(@"[PlayListDAO addMusic]: MUSIC(songMid: %@) WAS IN DB.", music.songMid);
-        [self updateMusicIsLocalFileBysongMid:music.songMid];
+        [self updateBysongMid:music.songMid withIsLocalFile:music.isLocalFile];
         return 0;
     }
     
@@ -469,7 +469,7 @@ static PlayListDAO *_sharedPlayListDAO;
     return 0;
 }
 
-- (int)updateMusicIsLocalFileBysongMid:(NSString *)songMid {
+- (int)updateBysongMid:(NSString *)songMid withIsLocalFile:(BOOL)isLocalFile {
     if (_hasProblem || !songMid)
         return -1;
     
@@ -486,7 +486,7 @@ static PlayListDAO *_sharedPlayListDAO;
         sqlite3_stmt *statement;
         
         if (sqlite3_prepare_v2(db, update_islocalfile_in_music_sql, -1, &statement, NULL) == SQLITE_OK) {
-            sqlite3_bind_int(statement, 1, music.isLocalFile ? 1 : 0);
+            sqlite3_bind_int(statement, 1, isLocalFile ? 1 : 0);
             sqlite3_bind_text(statement, 2, [songMid UTF8String], -1, NULL);
             if (sqlite3_step(statement) != SQLITE_DONE) {
                 NSLog(@"[PlayListDAO updateMusicIsLocalFileBysongMid]: UPDATE MUSIC(songMid: %@, songName: %@) FAILED!", music.songMid, music.songName);

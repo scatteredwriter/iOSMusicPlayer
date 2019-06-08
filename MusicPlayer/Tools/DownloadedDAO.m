@@ -284,6 +284,10 @@ static DownloadedDAO *_sharedDownloadedDAO;
             }
             else {
                 NSLog(@"[DownloadedDAO removeDownloadedBysongMid:]: DELETE DOWNLOADED_MUSIC(songMid: %@) SUCCESSFULLY!", songMid);
+                if ([[PlayListDAO sharedPlayListDAO] getMusicBysongMid:songMid]) {
+                    NSLog(@"[DownloadedDAO removeDownloadedBysongMid:]: UPDATE MUSIC isLocalFile.");
+                    [[PlayListDAO sharedPlayListDAO] updateBysongMid:songMid withIsLocalFile:NO];
+                }
             }
         }
         else {
